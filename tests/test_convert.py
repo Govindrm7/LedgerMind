@@ -124,9 +124,22 @@ def test_out_of_range_gold_indices_are_ignored():
         ("add(5829, #3)", "bad_reference"),
         ("frobnicate(5829, 5735)", "unknown_op"),
         ("add 5829 5735", "bad_program"),
+        ("subtract(1200, 1200)", "degenerate_plan"),
     ],
 )
 def test_failures_report_a_reason(program, reason):
     with pytest.raises(ConversionError) as info:
         convert(make(program))
     assert info.value.reason == reason
+
+
+def test_equal_arguments_in_one_step_cite_distinct_cells():
+    doc = Document.build("T", [["", "2015", "2014"], ["aircraft", "2289", "2289"]], [])
+    c = convert(FinQAExample("T-2", "change?", doc, "subtract(2289, 2289)", 0.0, {}))
+    assert c.target.plan == "e1 - e2"
+    assert c.target.evidence[1].source == TableSource(row=1, col=2)
+
+
+def test_reused_argument_across_steps_keeps_one_citation():
+    c = convert(make("subtract(5829, 5735), divide(#0, 5735)"))
+    assert len(c.target.evidence) == 2

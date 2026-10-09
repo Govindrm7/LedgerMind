@@ -14,7 +14,8 @@ conventions are made explicit in the plan rather than hidden in the evidence:
 * an argument that is the magnitude of a printed negative (the program says 23158, the
   cell says -23158) becomes ``(-e1)`` with e1 = -23158
 
-Examples that cannot be fully grounded are reported with a reason and left out of SFT.
+Examples that cannot be fully grounded, or whose gold program is degenerate (its result
+does not depend on the evidence), are reported with a reason and left out.
 """
 
 from __future__ import annotations
@@ -30,6 +31,7 @@ from ledgermind.document import Document
 from ledgermind.dsl import ALLOWED_LITERALS, compile_plan
 from ledgermind.numbers import extract_numbers, numbers_equal, parse_scalar
 from ledgermind.schema import REASONING_MAX_CHARS, Answer, Evidence, Source, TableSource, TextSource
+from ledgermind.verifier.hygiene import check_hygiene
 
 _STEP_RE = re.compile(r"(\w+)\((.*?)\)(?:,\s*|$)")
 _BINARY = {"add": "+", "subtract": "-", "multiply": "*", "divide": "/"}
@@ -139,17 +141,27 @@ class _Builder:
         rest = [loc for loc in self.doc.locations() if loc not in gold]
         return gold + rest
 
-    def _locate(self, value: float) -> tuple[Source, float, bool]:
-        """Find where ``value`` is printed. Returns (source, printed value, sign flipped)."""
+    def _locate(self, value: float, avoid: list[Source]) -> tuple[Source, float, bool]:
+        """Find where ``value`` is printed. Returns (source, printed value, sign flipped).
+
+        Locations in ``avoid`` are used only as a last resort. Within one step, two equal
+        arguments (``subtract(2289, 2289)`` for an unchanged figure) should cite two
+        different cells, otherwise the plan degenerates to ``e1 - e1``.
+        """
+
+        def pick(found: list[Source]) -> Source:
+            fresh = [s for s in found if s not in avoid]
+            return (fresh or found)[0]
+
         signed = [s for s in self._candidates() if self._printed(s, value)]
         if signed:
             if len(signed) > 1:
                 self.flags.add("ambiguous_location")
-            return signed[0], value, False
+            return pick(signed), value, False
         flipped = [s for s in self._candidates() if self._printed(s, -value)]
         if flipped and value != 0:
             self.flags.add("sign_flip")
-            return flipped[0], -value, True
+            return pick(flipped), -value, True
         raise ConversionError("unresolved_number", str(value))
 
     def _printed(self, source: Source, value: float) -> bool:
@@ -157,11 +169,12 @@ class _Builder:
 
     # program translation
 
-    def number(self, arg: str) -> _Expr:
+    def number(self, arg: str, step_sources: list[Source]) -> _Expr:
         parsed = parse_scalar(arg)
         if parsed is None:
             raise ConversionError("bad_argument", arg)
-        source, printed, flipped = self._locate(parsed.value)
+        source, printed, flipped = self._locate(parsed.value, step_sources)
+        step_sources.append(source)
         eid = self._add_evidence(source, printed)
         if parsed.is_percent:
             self.flags.add("percent_argument")
@@ -264,6 +277,7 @@ def convert(ex: FinQAExample) -> ConvertedExample:
         if len(raw_args) != 2:
             raise ConversionError("bad_arity", f"{op}({', '.join(raw_args)})")
         args: list[_Expr] = []
+        step_sources: list[Source] = []
         for arg in raw_args:
             if arg.startswith("#"):
                 k = int(arg[1:])
@@ -274,7 +288,7 @@ def convert(ex: FinQAExample) -> ConvertedExample:
             elif arg.startswith("const_"):
                 args.append(builder.constant(arg))
             else:
-                args.append(builder.number(arg))
+                args.append(builder.number(arg, step_sources))
 
         if op in _BINARY:
             sym = _BINARY[op]
@@ -310,6 +324,10 @@ def convert(ex: FinQAExample) -> ConvertedExample:
         )
     except ValidationError as err:
         raise ConversionError("schema_violation", str(err.errors()[0]["msg"])) from err
+    hygiene = check_hygiene(target)
+    if not hygiene.ok:
+        # Upstream programs such as subtract(x, x) over a single printed value.
+        raise ConversionError("degenerate_plan", hygiene.errors[0][1])
     flags = tuple(sorted(builder.flags))
     return ConvertedExample(ex.id, ex.question, ex.document, target, ex.gold_answer, flags)
 

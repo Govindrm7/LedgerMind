@@ -1,10 +1,10 @@
 {
   "train": {
-    "grounded": 6215,
+    "grounded": 6206,
     "total": 6251,
     "strict_accuracy_on_grounded": 0.9998,
     "scale_accuracy_on_grounded": 0.9998,
-    "pipeline_ceiling_strict": 0.9941,
+    "pipeline_ceiling_strict": 0.9926,
     "mismatches": [
       {
         "id": "DISH/2014/page_64.pdf-1",
@@ -15,19 +15,19 @@
     ]
   },
   "dev": {
-    "grounded": 875,
+    "grounded": 873,
     "total": 883,
     "strict_accuracy_on_grounded": 1.0,
     "scale_accuracy_on_grounded": 1.0,
-    "pipeline_ceiling_strict": 0.9909,
+    "pipeline_ceiling_strict": 0.9887,
     "mismatches": []
   },
   "test": {
-    "grounded": 1140,
+    "grounded": 1139,
     "total": 1147,
     "strict_accuracy_on_grounded": 1.0,
     "scale_accuracy_on_grounded": 1.0,
-    "pipeline_ceiling_strict": 0.9939,
+    "pipeline_ceiling_strict": 0.993,
     "mismatches": []
   }
 }
