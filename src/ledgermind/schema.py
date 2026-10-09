@@ -104,7 +104,7 @@ class ParseResult:
         return self.output is not None
 
 
-def _first_json_object(text: str) -> dict | None:
+def first_json_object(text: str) -> dict | None:
     decoder = json.JSONDecoder()
     start = text.find("{")
     while start != -1:
@@ -126,7 +126,7 @@ def parse_model_output(text: str) -> ParseResult:
     measures schema competence rather than formatting noise. Only the first JSON
     object is considered.
     """
-    obj = _first_json_object(text)
+    obj = first_json_object(text)
     if obj is None:
         return ParseResult(None, "no JSON object found")
     model: type[Answer] | type[Abstain] = Abstain if "abstain" in obj else Answer
