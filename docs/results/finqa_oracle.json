@@ -1,0 +1,33 @@
+{
+  "train": {
+    "grounded": 6215,
+    "total": 6251,
+    "strict_accuracy_on_grounded": 0.9998,
+    "scale_accuracy_on_grounded": 0.9998,
+    "pipeline_ceiling_strict": 0.9941,
+    "mismatches": [
+      {
+        "id": "DISH/2014/page_64.pdf-1",
+        "plan": "mean(e1, e2)",
+        "value": 68.685,
+        "gold": 51.8
+      }
+    ]
+  },
+  "dev": {
+    "grounded": 875,
+    "total": 883,
+    "strict_accuracy_on_grounded": 1.0,
+    "scale_accuracy_on_grounded": 1.0,
+    "pipeline_ceiling_strict": 0.9909,
+    "mismatches": []
+  },
+  "test": {
+    "grounded": 1140,
+    "total": 1147,
+    "strict_accuracy_on_grounded": 1.0,
+    "scale_accuracy_on_grounded": 1.0,
+    "pipeline_ceiling_strict": 0.9939,
+    "mismatches": []
+  }
+}
