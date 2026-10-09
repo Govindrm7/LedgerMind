@@ -16,6 +16,10 @@ set -euo pipefail
 source "${LEDGERMIND_ENV:-$HOME/.config/ledgermind/env.sh}"
 lm_activate
 
+# Scored runs use batch invariant kernels: greedy decoding then gives identical outputs on
+# every run, which paired significance tests need. Latency benchmarks use the default mode.
+export VLLM_BATCH_INVARIANT="${VLLM_BATCH_INVARIANT:-1}"
+
 MODEL="${1:?model path or hub id}"
 NAME="${2:?run name}"
 SPLIT="${3:-test}"
@@ -25,7 +29,7 @@ EXAMPLES="data/processed/finqa/$SPLIT.jsonl"
 OUT="outputs/eval/${NAME}_${SPLIT}"
 mkdir -p outputs/eval
 
-echo "model $MODEL name $NAME split $SPLIT variant $VARIANT git $(git rev-parse --short HEAD)"
+echo "model $MODEL name $NAME split $SPLIT variant $VARIANT batch_invariant $VLLM_BATCH_INVARIANT git $(git rev-parse --short HEAD)"
 serving/launch_vllm.sh "$MODEL" "$VARIANT" "$PORT" > "logs/vllm-$SLURM_JOB_ID.log" 2>&1 &
 SERVER=$!
 trap 'kill $SERVER 2>/dev/null || true' EXIT
