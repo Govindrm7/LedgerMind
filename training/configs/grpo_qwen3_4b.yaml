@@ -1,0 +1,39 @@
+# GRPO with the verifier reward, from the merged SFT model. One H100 80GB with vLLM colocated.
+model: checkpoints/sft_qwen3_4b_merged
+train_file: data/processed/finqa/train.jsonl
+prompt_ids_file: outputs/pass_rates.json   # keep prompts with 0 < SFT pass rate < 1
+output_dir: checkpoints/grpo_qwen3_4b
+max_prompt_length: 3584
+max_completion_length: 512   # targets average about 110 tokens
+match_mode: scale
+model_init_kwargs:
+  dtype: bfloat16
+  attn_implementation: sdpa
+lora:
+  rank: 32
+  alpha: 64
+  dropout: 0.0
+  target_modules: all-linear
+reward_weights: {}   # defaults from ledgermind.rewards.RewardWeights
+train:
+  learning_rate: 5.0e-6   # LoRA needs roughly 10x the full finetune rate; sweep 2e-6 to 1e-5
+  lr_scheduler_type: constant_with_warmup
+  warmup: 0.03
+  beta: 0.0               # TRL 1.x default; ablate 0.04
+  loss_type: dapo
+  num_generations: 8
+  temperature: 0.9
+  mask_truncated_completions: true
+  per_device_batch_size: 8
+  gradient_accumulation_steps: 4
+  max_steps: 400
+  gradient_checkpointing: true
+  bf16: true
+  logging_steps: 5
+  save_steps: 50
+  log_completions: true
+  use_vllm: true
+  vllm_mode: colocate
+  vllm_gpu_memory_utilization: 0.35
+  report_to: none
+  seed: 0

@@ -1,0 +1,29 @@
+# SFT on FinQA train, Qwen3-4B-Base with LoRA. One A100 or H100 80GB.
+model: Qwen/Qwen3-4B-Base
+train_file: data/processed/finqa/train.jsonl
+eval_file: data/processed/finqa/dev.jsonl
+max_eval_examples: 300
+output_dir: checkpoints/sft_qwen3_4b
+max_length: 4096
+model_init_kwargs:
+  dtype: bfloat16
+  attn_implementation: sdpa
+lora:
+  rank: 32
+  alpha: 64
+  dropout: 0.05
+  target_modules: all-linear
+train:
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup: 0.05
+  epochs: 2
+  per_device_batch_size: 4
+  gradient_accumulation_steps: 4   # effective batch 16
+  gradient_checkpointing: true
+  bf16: true
+  logging_steps: 10
+  eval_steps: 100
+  save_strategy: epoch
+  report_to: none
+  seed: 0

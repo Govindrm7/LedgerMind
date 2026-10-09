@@ -1,0 +1,22 @@
+# CPU smoke test for GRPO: tiny model, transformers generation, two steps.
+model: trl-internal-testing/tiny-Qwen3ForCausalLM
+train_file: data/processed/finqa/dev.jsonl
+max_train_examples: 8
+output_dir: outputs/smoke_grpo
+max_prompt_length: 4096
+max_completion_length: 32
+lora: {rank: 8, alpha: 16, dropout: 0.0, target_modules: all-linear}
+train:
+  learning_rate: 1.0e-4
+  warmup: 0
+  num_generations: 4
+  per_device_batch_size: 4
+  gradient_accumulation_steps: 1
+  max_steps: 2
+  gradient_checkpointing: false
+  bf16: false
+  logging_steps: 1
+  save_steps: 1000
+  log_completions: false
+  use_vllm: false
+  use_cpu: true

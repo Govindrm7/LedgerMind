@@ -1,0 +1,20 @@
+# CPU smoke test: a tiny random model, a handful of steps. Checks plumbing, not quality.
+model: trl-internal-testing/tiny-Qwen3ForCausalLM
+train_file: data/processed/finqa/dev.jsonl
+eval_file: data/processed/finqa/dev.jsonl
+max_train_examples: 16
+max_eval_examples: 4
+output_dir: outputs/smoke_sft
+max_length: 4096
+lora: {rank: 8, alpha: 16, dropout: 0.0, target_modules: all-linear}
+train:
+  learning_rate: 1.0e-3
+  warmup: 0
+  max_steps: 2
+  per_device_batch_size: 2
+  gradient_accumulation_steps: 1
+  gradient_checkpointing: false
+  bf16: false
+  logging_steps: 1
+  save_strategy: "no"
+  use_cpu: true
