@@ -46,6 +46,17 @@ def build_prompt(question: str, doc: Document) -> str:
     )
 
 
+DIRECT_INSTRUCTIONS = """You answer questions about a financial document. Think step by \
+step, then give the final answer on its own last line as "Answer: <value>". Write numbers \
+without units or thousands separators, a percentage as its number of percent (5.2 for \
+5.2%), and yes or no for yes or no questions."""
+
+
+def build_direct_prompt(question: str, doc: Document) -> str:
+    """Baseline prompt: the model computes the answer itself. Same document rendering."""
+    return f"{DIRECT_INSTRUCTIONS}\n\n### Document\n{doc.render()}\n\n### Question\n{question}\n"
+
+
 def build_messages(question: str, doc: Document) -> list[dict[str, str]]:
     """The same prompt as one user message, for chat API baselines."""
     return [{"role": "user", "content": build_prompt(question, doc)}]

@@ -13,7 +13,15 @@ import math
 from dataclasses import dataclass
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    TypeAdapter,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
 
 REASONING_MAX_CHARS = 600
 MAX_EVIDENCE = 32
@@ -87,6 +95,11 @@ class Abstain(_Strict):
 
 
 ModelOutput = Answer | Abstain
+
+
+def output_json_schema() -> dict:
+    """JSON schema of the output contract, for constrained decoding at serving time."""
+    return TypeAdapter(ModelOutput).json_schema()
 
 
 def to_json(output: ModelOutput) -> str:
