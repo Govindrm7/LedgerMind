@@ -18,7 +18,7 @@ PORT="${3:-8000}"
 
 ARGS=(
   --served-model-name ledgermind
-  --max-model-len 4096
+  --max-model-len 8192
   --gpu-memory-utilization 0.90
   --port "$PORT"
   --seed 0
