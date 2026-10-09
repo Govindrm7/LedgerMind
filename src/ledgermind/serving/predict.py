@@ -33,6 +33,8 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--constrained", action="store_true", help="JSON schema decoding")
     parser.add_argument("--concurrency", type=int, default=32)
     parser.add_argument("--max-tokens", type=int, default=512)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--seed", type=int, help="sampling seed sent with every request")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--api-key-env", help="environment variable holding the API key")
     args = parser.parse_args(argv)
@@ -46,6 +48,8 @@ def main(argv: list[str] | None = None) -> None:
         endpoint=args.endpoint,
         api_key=os.environ.get(args.api_key_env) if args.api_key_env else None,
         max_tokens=args.max_tokens if not args.direct else max(args.max_tokens, 1024),
+        temperature=args.temperature,
+        seed=args.seed,
         constrained=args.constrained,
     )
     results, wall = asyncio.run(generate_all(cfg, items, args.concurrency))

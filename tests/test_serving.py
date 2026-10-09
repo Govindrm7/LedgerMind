@@ -65,6 +65,12 @@ def test_constrained_decoding_sends_the_output_schema():
     assert "anyOf" in json.dumps(output_json_schema())
 
 
+def test_sampling_seed_is_sent_only_when_set():
+    assert "seed" not in request_body(CFG, "p")
+    body = request_body(ClientConfig(base_url="u", model="m", temperature=0.9, seed=3), "p")
+    assert body["temperature"] == 0.9 and body["seed"] == 3
+
+
 def test_bench_sweep_reports_each_level():
     transport, _ = fake_server()
     items = [(f"q{i}", "p") for i in range(8)]
