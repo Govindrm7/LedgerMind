@@ -19,8 +19,13 @@ data/processed/
 outputs/
 checkpoints/
 wandb/
+logs/
 
 # OS and editors
 .DS_Store
 .vscode/
 .idea/
+
+# Secrets
+.env
+.env.*
