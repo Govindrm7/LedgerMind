@@ -26,6 +26,7 @@ reward, so padding an answer with easy, real figures does not pay.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 
 from ledgermind.document import Document
@@ -91,12 +92,12 @@ def compute_reward(
     if not parsed.ok:
         if _smuggled(completion):
             terms["bypass"] = weights.bypass
-        return RewardBreakdown(sum(terms.values()), terms)
+        return RewardBreakdown(math.fsum(terms.values()), terms)
 
     terms["schema"] = weights.schema
     verdict = verify(parsed, doc, integrity_issues=integrity_issues)
     if not isinstance(parsed.output, Answer):
-        return RewardBreakdown(sum(terms.values()), terms, verdict)
+        return RewardBreakdown(math.fsum(terms.values()), terms, verdict)
 
     answer = parsed.output
     codes = verdict.codes
@@ -118,4 +119,4 @@ def compute_reward(
     )
     if not fabricated and not bypassed and answers_match(verdict.value, gold, match_mode):
         terms["correct"] = weights.correct
-    return RewardBreakdown(sum(terms.values()), terms, verdict)
+    return RewardBreakdown(math.fsum(terms.values()), terms, verdict)
