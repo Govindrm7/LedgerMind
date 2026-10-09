@@ -109,8 +109,9 @@ def _additive_column(doc: Document, col: int) -> bool:
     return not _NON_ADDITIVE_RE.search(doc.column_header(col).lower())
 
 
-def check_footings(doc: Document) -> list[IntegrityIssue]:
+def _scan_footings(doc: Document) -> tuple[list[IntegrityIssue], set[TableSource]]:
     issues: list[IntegrityIssue] = []
+    covered: set[TableSource] = set()
     subtotals: dict[int, int] = {}
     for row in range(1, doc.n_rows):
         if not _TOTAL_RE.search(doc.row_label(row).lower()):
@@ -129,9 +130,11 @@ def check_footings(doc: Document) -> list[IntegrityIssue]:
             block_start = max(consensus) if consensus else max(starts[footed[0]])
             subtotals[row] = block_start
             for c in cols:
+                block = tuple(TableSource(row=r, col=c) for r in range(block_start, row + 1))
                 if starts[c]:
+                    covered.update(block)
                     continue
-                locations = tuple(TableSource(row=r, col=c) for r in range(block_start, row + 1))
+                locations = block
                 issues.append(
                     IntegrityIssue(
                         "footing_broken",
@@ -140,7 +143,16 @@ def check_footings(doc: Document) -> list[IntegrityIssue]:
                         f"{len(footed)} other column(s) do",
                     )
                 )
-    return issues
+    return issues, covered
+
+
+def check_footings(doc: Document) -> list[IntegrityIssue]:
+    return _scan_footings(doc)[0]
+
+
+def footed_cells(doc: Document) -> set[TableSource]:
+    """Cells that take part in a total that foots. Tampering with these is detectable."""
+    return _scan_footings(doc)[1]
 
 
 def _digit_shape(m: NumberMention, text: str) -> tuple[str, str]:

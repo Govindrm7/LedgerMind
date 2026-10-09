@@ -26,7 +26,13 @@ class _Strict(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-class TableSource(_Strict):
+class _Pointer(BaseModel):
+    """Immutable and hashable, so pointers can key sets and dicts."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+
+class TableSource(_Pointer):
     """A table cell, addressed by zero based row and column (row 0 is the header)."""
 
     type: Literal["table"] = "table"
@@ -34,7 +40,7 @@ class TableSource(_Strict):
     col: int = Field(ge=0)
 
 
-class TextSource(_Strict):
+class TextSource(_Pointer):
     """A sentence of the document text, addressed by zero based index."""
 
     type: Literal["text"] = "text"

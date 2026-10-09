@@ -59,5 +59,63 @@
       "detection_rate": 1.0,
       "expected_code_rate": 1.0
     }
+  },
+  "mode_b_document_faults": {
+    "digit_change": {
+      "cases": 677,
+      "stale_rejected": 677,
+      "clean_docs": 674,
+      "doc_flagged": 166,
+      "faithful_cases": 677,
+      "faithful_flagged": 169,
+      "detectable": 219,
+      "detectable_flagged": 167,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.2463,
+      "faithful_detection_rate": 0.2496,
+      "detectable_share": 0.3235,
+      "detection_rate_when_detectable": 0.7626
+    },
+    "sign_flip": {
+      "cases": 677,
+      "stale_rejected": 677,
+      "clean_docs": 674,
+      "doc_flagged": 178,
+      "faithful_cases": 677,
+      "faithful_flagged": 181,
+      "detectable": 213,
+      "detectable_flagged": 179,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.2641,
+      "faithful_detection_rate": 0.2674,
+      "detectable_share": 0.3146,
+      "detection_rate_when_detectable": 0.8404
+    },
+    "swap_columns": {
+      "cases": 531,
+      "stale_rejected": 531,
+      "clean_docs": 528,
+      "doc_flagged": 117,
+      "faithful_cases": 531,
+      "faithful_flagged": 117,
+      "detectable": 180,
+      "detectable_flagged": 115,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.2216,
+      "faithful_detection_rate": 0.2203,
+      "detectable_share": 0.339,
+      "detection_rate_when_detectable": 0.6389
+    },
+    "delete_row": {
+      "cases": 681,
+      "stale_rejected": 681,
+      "clean_docs": 678,
+      "doc_flagged": 5,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.0074,
+      "faithful_detection_rate": null,
+      "detectable_share": null,
+      "detection_rate_when_detectable": null
+    }
   }
 }
