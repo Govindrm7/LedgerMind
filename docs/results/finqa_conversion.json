@@ -1,0 +1,48 @@
+{
+  "train": {
+    "total": 6251,
+    "converted": 6215,
+    "coverage": 0.9942,
+    "failures": {
+      "unresolved_number": 20,
+      "unused_evidence": 10,
+      "no_evidence": 4,
+      "unresolved_row": 2
+    },
+    "flags": {
+      "ambiguous_location": 1484,
+      "percent_argument": 234,
+      "sign_flip": 216
+    }
+  },
+  "dev": {
+    "total": 883,
+    "converted": 875,
+    "coverage": 0.9909,
+    "failures": {
+      "unresolved_number": 4,
+      "no_evidence": 3,
+      "unused_evidence": 1
+    },
+    "flags": {
+      "ambiguous_location": 179,
+      "percent_argument": 31,
+      "sign_flip": 18
+    }
+  },
+  "test": {
+    "total": 1147,
+    "converted": 1140,
+    "coverage": 0.9939,
+    "failures": {
+      "unresolved_number": 3,
+      "unused_evidence": 3,
+      "no_evidence": 1
+    },
+    "flags": {
+      "ambiguous_location": 258,
+      "percent_argument": 38,
+      "sign_flip": 37
+    }
+  }
+}
