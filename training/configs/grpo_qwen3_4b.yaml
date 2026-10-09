@@ -1,4 +1,4 @@
-# GRPO with the verifier reward, from the merged SFT model. One H100 80GB with vLLM colocated.
+# GRPO with the verifier reward, from the merged SFT model. One H100 or H200 with vLLM colocated.
 model: checkpoints/sft_qwen3_4b_merged
 train_file: data/processed/finqa/train.jsonl
 prompt_ids_file: outputs/pass_rates.json   # keep prompts with 0 < SFT pass rate < 1
@@ -25,12 +25,12 @@ train:
   temperature: 0.9
   mask_truncated_completions: true
   per_device_batch_size: 8
-  gradient_accumulation_steps: 4
-  max_steps: 400
+  gradient_accumulation_steps: 16   # 128 rollouts per step = 16 prompts x 8 generations
+  max_steps: 200                   # about 1.2 passes over the 2,716 informative prompts
   gradient_checkpointing: true
   bf16: true
   logging_steps: 5
-  save_steps: 50
+  save_steps: 25                   # resume point if a job hits the 8 hour limit
   log_completions: true
   use_vllm: true
   vllm_mode: colocate
