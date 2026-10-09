@@ -1,0 +1,16 @@
+# GPU environment for the Explorer cluster (NVIDIA driver 570, CUDA 12.8 runtime).
+# PyPI torch 2.13 is built for CUDA 13.0, which that driver cannot run, so torch comes from
+# the PyTorch cu129 index and vLLM from its cu129 release wheel.
+# Regenerate the lock with slurm/lock_env.sh.
+torch==2.13.0
+vllm @ https://github.com/vllm-project/vllm/releases/download/v0.31.0/vllm-0.31.0+cu129-cp38-abi3-manylinux_2_28_x86_64.whl
+trl[vllm]==1.15.0
+transformers>=5.0
+peft>=0.17
+datasets>=4.0
+accelerate>=1.10
+pyyaml>=6.0
+pydantic>=2.6
+httpx>=0.27
+pytest>=8.0
+ruff>=0.6
