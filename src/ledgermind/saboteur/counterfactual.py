@@ -9,8 +9,9 @@ are no longer printed where they are cited.
 
 Every cited figure is scaled by a random factor in [0.90, 0.97] or [1.03, 1.10], printed
 with its original precision, sign and format. All other places that print the same figure
-are rewritten too, so the edited document stays self consistent and a model cannot fall
-back on an untouched copy of the original number. The gold answer is recomputed by running
+are rewritten too, so a model cannot fall back on an untouched copy of the original
+number. Edits that break a table footing are discarded, so every counterfactual document
+passes the same integrity checks as a real one. The gold answer is recomputed by running
 the gold plan on the new figures.
 
 Usage::
@@ -102,8 +103,8 @@ def build_counterfactual(ex: ConvertedExample, rng: random.Random) -> Counterfac
         return None
     if answers_match(gold, ex.gold_answer, "scale"):
         return None  # the edit did not change the answer, so it cannot expose recall
-    if not verify(target, doc, integrity=False).accepted:
-        return None
+    if not verify(target, doc).accepted:
+        return None  # edits that break a footing would make the document detectably fake
     edits = tuple((old, new_values[old]) for old in mapping)
     cf = ConvertedExample(ex.id, ex.question, doc, target, gold, ex.flags)
     return CounterfactualExample(cf, ex.gold_answer, edits)

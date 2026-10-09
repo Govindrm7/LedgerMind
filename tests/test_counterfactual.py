@@ -34,7 +34,7 @@ def test_counterfactual_changes_answer_and_stays_verifiable():
     assert cf is not None
     assert cf.original_gold == GOLD
     assert cf.example.gold_answer != GOLD
-    assert verify(cf.example.target, cf.example.document, integrity=False).accepted
+    assert verify(cf.example.target, cf.example.document).accepted
     assert not verify(TARGET, cf.example.document, integrity=False).accepted
 
 
