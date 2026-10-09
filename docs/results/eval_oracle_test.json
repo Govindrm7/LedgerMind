@@ -1,0 +1,37 @@
+{
+  "system": "oracle",
+  "examples": "data/processed/finqa/test.jsonl",
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.9921,
+    "low": 0.9868,
+    "high": 0.9965
+  },
+  "verified_accuracy": {
+    "mean": 0.9921,
+    "low": 0.9868,
+    "high": 0.9965
+  },
+  "ungated_accuracy": {
+    "mean": 1.0,
+    "low": 1.0,
+    "high": 1.0
+  },
+  "coverage": {
+    "mean": 0.9921,
+    "low": 0.9868,
+    "high": 0.9965
+  },
+  "selective_accuracy": {
+    "mean": 1.0,
+    "low": 1.0,
+    "high": 1.0
+  },
+  "parse_rate": 1.0,
+  "abstain_rate": 0.0,
+  "fabrication_rate": 0.0,
+  "rejection_reasons": {
+    "source_footing_broken": 8,
+    "unit_mismatch": 1
+  }
+}
