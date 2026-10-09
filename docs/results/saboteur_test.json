@@ -1,0 +1,121 @@
+{
+  "split": "test",
+  "seed": 0,
+  "examples": 1139,
+  "mode_a_output_faults": {
+    "digit_change": {
+      "cases": 1137,
+      "detected": 1137,
+      "detected_as_expected": 1137,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "sign_flip": {
+      "cases": 1139,
+      "detected": 1139,
+      "detected_as_expected": 1139,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "wrong_row": {
+      "cases": 832,
+      "detected": 832,
+      "detected_as_expected": 832,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "scale_error": {
+      "cases": 1139,
+      "detected": 1139,
+      "detected_as_expected": 1139,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "hardcoded_answer": {
+      "cases": 1106,
+      "detected": 1106,
+      "detected_as_expected": 1106,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "disguised_constant": {
+      "cases": 1119,
+      "detected": 1119,
+      "detected_as_expected": 1119,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "wrong_column": {
+      "cases": 677,
+      "detected": 677,
+      "detected_as_expected": 677,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "percent_as_fraction": {
+      "cases": 63,
+      "detected": 63,
+      "detected_as_expected": 63,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    }
+  },
+  "mode_b_document_faults": {
+    "digit_change": {
+      "cases": 848,
+      "stale_rejected": 848,
+      "clean_docs": 829,
+      "doc_flagged": 200,
+      "faithful_cases": 848,
+      "faithful_flagged": 214,
+      "detectable": 270,
+      "detectable_flagged": 208,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.2413,
+      "faithful_detection_rate": 0.2524,
+      "detectable_share": 0.3184,
+      "detection_rate_when_detectable": 0.7704
+    },
+    "sign_flip": {
+      "cases": 848,
+      "stale_rejected": 848,
+      "clean_docs": 829,
+      "doc_flagged": 215,
+      "faithful_cases": 848,
+      "faithful_flagged": 229,
+      "detectable": 267,
+      "detectable_flagged": 226,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.2593,
+      "faithful_detection_rate": 0.27,
+      "detectable_share": 0.3149,
+      "detection_rate_when_detectable": 0.8464
+    },
+    "delete_row": {
+      "cases": 853,
+      "stale_rejected": 850,
+      "clean_docs": 834,
+      "doc_flagged": 6,
+      "stale_rejection_rate": 0.9965,
+      "document_flag_rate": 0.0072,
+      "faithful_detection_rate": null,
+      "detectable_share": null,
+      "detection_rate_when_detectable": null
+    },
+    "swap_columns": {
+      "cases": 674,
+      "stale_rejected": 674,
+      "clean_docs": 655,
+      "doc_flagged": 152,
+      "faithful_cases": 674,
+      "faithful_flagged": 157,
+      "detectable": 234,
+      "detectable_flagged": 152,
+      "stale_rejection_rate": 1.0,
+      "document_flag_rate": 0.2321,
+      "faithful_detection_rate": 0.2329,
+      "detectable_share": 0.3472,
+      "detection_rate_when_detectable": 0.6496
+    }
+  }
+}
