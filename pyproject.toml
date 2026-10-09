@@ -5,10 +5,26 @@ description = "Finance question answering where the LLM proposes and a determini
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{ name = "Govind Mudavadkar" }]
 dependencies = [
     "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+# Fine tuning (SFT and GRPO). Runs on CPU or MPS for smoke tests; real runs need CUDA.
+train = [
+    "torch>=2.6",
+    "transformers>=5.0",
+    "trl>=1.10",
+    "peft>=0.17",
+    "datasets>=4.0",
+    "accelerate>=1.10",
+    "pyyaml>=6.0",
+]
+# Benchmark client for an OpenAI compatible server (vLLM itself is installed on the GPU host).
+serve = [
+    "httpx>=0.27",
 ]
 
 [dependency-groups]
@@ -30,7 +46,7 @@ addopts = "-q"
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM"]
