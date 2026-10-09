@@ -6,11 +6,11 @@
 # Writes outputs/eval/<name>_<split>.jsonl (raw outputs), <name>_<split>.json (metrics)
 # and <name>_<split>_rows.jsonl (per question verdicts).
 #SBATCH --job-name=lm-eval
-#SBATCH --partition=gpu
+#SBATCH --partition=gpu,gpu-short   # short jobs backfill sooner on gpu-short
 #SBATCH --gres=gpu:h200:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
-#SBATCH --time=02:00:00
+#SBATCH --time=00:30:00
 #SBATCH --output=logs/%x-%j.out
 set -euo pipefail
 source "${LEDGERMIND_ENV:-$HOME/.config/ledgermind/env.sh}"
