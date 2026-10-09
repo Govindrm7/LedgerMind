@@ -35,6 +35,18 @@ def fits(tokenizer, prompt: str, completion: str, max_length: int) -> bool:
     return n + 1 <= max_length  # +1 for the EOS token appended to the completion
 
 
+def last_checkpoint(output_dir: str) -> str | None:
+    """The newest ``checkpoint-N`` in ``output_dir``, so a job cut off by a time limit resumes."""
+    from transformers.trainer_utils import get_last_checkpoint
+
+    if not Path(output_dir).is_dir():
+        return None
+    last = get_last_checkpoint(output_dir)
+    if last:
+        print(f"resuming from {last}")
+    return last
+
+
 def write_run_metadata(output_dir: str, config: dict, **extra) -> None:
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)

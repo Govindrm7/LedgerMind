@@ -12,6 +12,7 @@ import argparse
 from common import (
     fits,
     install_cpu_kernel_fallback,
+    last_checkpoint,
     load_config,
     load_tokenizer,
     write_run_metadata,
@@ -93,7 +94,7 @@ def main() -> None:
     sample = trainer.train_dataset[0]
     if sample["input_ids"][-1] != tokenizer.eos_token_id:
         raise RuntimeError("completions must end with EOS so the model learns to stop")
-    result = trainer.train()
+    result = trainer.train(resume_from_checkpoint=last_checkpoint(cfg["output_dir"]))
     trainer.save_model(cfg["output_dir"])
     tokenizer.save_pretrained(cfg["output_dir"])
     write_run_metadata(

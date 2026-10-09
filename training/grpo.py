@@ -18,6 +18,7 @@ import json
 from common import (
     fits,
     install_cpu_kernel_fallback,
+    last_checkpoint,
     load_config,
     load_tokenizer,
     write_run_metadata,
@@ -103,7 +104,7 @@ def main() -> None:
         processing_class=tokenizer,
         peft_config=peft_config,
     )
-    result = trainer.train()
+    result = trainer.train(resume_from_checkpoint=last_checkpoint(cfg["output_dir"]))
     trainer.save_model(cfg["output_dir"])
     write_run_metadata(
         cfg["output_dir"],
