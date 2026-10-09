@@ -1,0 +1,377 @@
+[
+ {
+  "id": "ETR/2008/page_313.pdf-3",
+  "filename": "ETR/2008/page_313.pdf",
+  "pre_text": [
+   "entergy louisiana , llc management's financial discussion and analysis net revenue 2008 compared to 2007 net revenue consists of operating revenues net of : 1 ) fuel , fuel-related expenses , and gas purchased for resale , 2 ) purchased power expenses , and 3 ) other regulatory charges .",
+   "following is an analysis of the change in net revenue comparing 2008 to 2007 .",
+   "amount ( in millions ) ."
+  ],
+  "post_text": [
+   "the retail electric price variance is primarily due to the cessation of the interim storm recovery through the formula rate plan upon the act 55 financing of storm costs and a credit passed on to customers as a result of the act 55 storm cost financing , partially offset by increases in the formula rate plan effective october 2007 .",
+   "refer to \"hurricane rita and hurricane katrina\" and \"state and local rate regulation\" below for a discussion of the interim recovery of storm costs , the act 55 storm cost financing , and the formula rate plan filing .",
+   "the purchased power capacity variance is due to the amortization of deferred capacity costs effective september 2007 as a result of the formula rate plan filing in may 2007 .",
+   "purchased power capacity costs are offset in base revenues due to a base rate increase implemented to recover incremental deferred and ongoing purchased power capacity charges .",
+   "see \"state and local rate regulation\" below for a discussion of the formula rate plan filing .",
+   "the net wholesale revenue variance is primarily due to provisions recorded for potential rate refunds related to the treatment of interruptible load in pricing entergy system affiliate sales .",
+   "gross operating revenue and , fuel and purchased power expenses gross operating revenues increased primarily due to an increase of $ 364.7 million in fuel cost recovery revenues due to higher fuel rates offset by decreased usage .",
+   "the increase was partially offset by a decrease of $ 56.8 million in gross wholesale revenue due to a decrease in system agreement rough production cost equalization credits .",
+   "fuel and purchased power expenses increased primarily due to increases in the average market prices of natural gas and purchased power , partially offset by a decrease in the recovery from customers of deferred fuel costs. ."
+  ],
+  "table": [
+   [
+    "",
+    "amount ( in millions )"
+   ],
+   [
+    "2007 net revenue",
+    "$ 991.1"
+   ],
+   [
+    "retail electric price",
+    "-17.1 ( 17.1 )"
+   ],
+   [
+    "purchased power capacity",
+    "-12.0 ( 12.0 )"
+   ],
+   [
+    "net wholesale revenue",
+    "-7.4 ( 7.4 )"
+   ],
+   [
+    "other",
+    "4.6"
+   ],
+   [
+    "2008 net revenue",
+    "$ 959.2"
+   ]
+  ],
+  "qa": {
+   "question": "what is the growth rate in net revenue in 2008?",
+   "program": "subtract(959.2, 991.1), divide(#0, 991.1)",
+   "exe_ans": -0.03219,
+   "gold_inds": {
+    "table_1": "the 2007 net revenue of amount ( in millions ) is $ 991.1 ;",
+    "table_6": "the 2008 net revenue of amount ( in millions ) is $ 959.2 ;"
+   }
+  }
+ },
+ {
+  "id": "JPM/2018/page_73.pdf-5",
+  "filename": "JPM/2018/page_73.pdf",
+  "pre_text": [
+   "jpmorgan chase & co./2018 form 10-k 41 five-year stock performance the following table and graph compare the five-year cumulative total return for jpmorgan chase & co .",
+   "( 201cjpmorgan chase 201d or the 201cfirm 201d ) common stock with the cumulative return of the s&p 500 index , the kbw bank index and the s&p financial index .",
+   "the s&p 500 index is a commonly referenced equity benchmark in the united states of america ( 201cu.s . 201d ) , consisting of leading companies from different economic sectors .",
+   "the kbw bank index seeks to reflect the performance of banks and thrifts that are publicly traded in the u.s .",
+   "and is composed of leading national money center and regional banks and thrifts .",
+   "the s&p financial index is an index of financial companies , all of which are components of the s&p 500 .",
+   "the firm is a component of all three industry indices .",
+   "the following table and graph assume simultaneous investments of $ 100 on december 31 , 2013 , in jpmorgan chase common stock and in each of the above indices .",
+   "the comparison assumes that all dividends are reinvested .",
+   "december 31 , ( in dollars ) 2013 2014 2015 2016 2017 2018 ."
+  ],
+  "post_text": [
+   "december 31 , ( in dollars ) ."
+  ],
+  "table": [
+   [
+    "december 31 ( in dollars )",
+    "2013",
+    "2014",
+    "2015",
+    "2016",
+    "2017",
+    "2018"
+   ],
+   [
+    "jpmorgan chase",
+    "$ 100.00",
+    "$ 109.88",
+    "$ 119.07",
+    "$ 160.23",
+    "$ 203.07",
+    "$ 189.57"
+   ],
+   [
+    "kbw bank index",
+    "100.00",
+    "109.36",
+    "109.90",
+    "141.23",
+    "167.49",
+    "137.82"
+   ],
+   [
+    "s&p financial index",
+    "100.00",
+    "115.18",
+    "113.38",
+    "139.17",
+    "169.98",
+    "147.82"
+   ],
+   [
+    "s&p 500 index",
+    "100.00",
+    "113.68",
+    "115.24",
+    "129.02",
+    "157.17",
+    "150.27"
+   ]
+  ],
+  "qa": {
+   "question": "did jpmorgan chase outperform the kbw bank index?",
+   "program": "greater(189.57, 137.82)",
+   "exe_ans": "yes",
+   "gold_inds": {
+    "table_1": "december 31 ( in dollars ) the jpmorgan chase of 2013 is $ 100.00 ; the jpmorgan chase of 2014 is $ 109.88 ; the jpmorgan chase of 2015 is $ 119.07 ; the jpmorgan chase of 2016 is $ 160.23 ; the jpmorgan chase of 2017 is $ 203.07 ; the jpmorgan chase of 2018 is $ 189.57 ;",
+    "table_2": "december 31 ( in dollars ) the kbw bank index of 2013 is 100.00 ; the kbw bank index of 2014 is 109.36 ; the kbw bank index of 2015 is 109.90 ; the kbw bank index of 2016 is 141.23 ; the kbw bank index of 2017 is 167.49 ; the kbw bank index of 2018 is 137.82 ;"
+   }
+  }
+ },
+ {
+  "id": "STT/2007/page_65.pdf-2",
+  "filename": "STT/2007/page_65.pdf",
+  "pre_text": [
+   "cross-border outstandings to countries in which we do business which amounted to at least 1% ( 1 % ) of our consolidated total assets were as follows as of december 31 : 2007 2006 2005 ( in millions ) ."
+  ],
+  "post_text": [
+   "the total cross-border outstandings presented in the table represented 12% ( 12 % ) , 9% ( 9 % ) and 11% ( 11 % ) of our consolidated total assets as of december 31 , 2007 , 2006 and 2005 , respectively .",
+   "there were no cross- border outstandings to countries which totaled between .75% ( .75 % ) and 1% ( 1 % ) of our consolidated total assets as of december 31 , 2007 .",
+   "aggregate cross-border outstandings to countries which totaled between .75% ( .75 % ) and 1% ( 1 % ) of our consolidated total assets at december 31 , 2006 , amounted to $ 1.05 billion ( canada ) and at december 31 , 2005 , amounted to $ 1.86 billion ( belgium and japan ) .",
+   "capital regulatory and economic capital management both use key metrics evaluated by management to ensure that our actual level of capital is commensurate with our risk profile , is in compliance with all regulatory requirements , and is sufficient to provide us with the financial flexibility to undertake future strategic business initiatives .",
+   "regulatory capital our objective with respect to regulatory capital management is to maintain a strong capital base in order to provide financial flexibility for our business needs , including funding corporate growth and supporting customers 2019 cash management needs , and to provide protection against loss to depositors and creditors .",
+   "we strive to maintain an optimal level of capital , commensurate with our risk profile , on which an attractive return to shareholders will be realized over both the short and long term , while protecting our obligations to depositors and creditors and satisfying regulatory requirements .",
+   "our capital management process focuses on our risk exposures , our capital position relative to our peers , regulatory capital requirements and the evaluations of the major independent credit rating agencies that assign ratings to our public debt .",
+   "the capital committee , working in conjunction with the asset and liability committee , referred to as 2018 2018alco , 2019 2019 oversees the management of regulatory capital , and is responsible for ensuring capital adequacy with respect to regulatory requirements , internal targets and the expectations of the major independent credit rating agencies .",
+   "the primary regulator of both state street and state street bank for regulatory capital purposes is the federal reserve board .",
+   "both state street and state street bank are subject to the minimum capital requirements established by the federal reserve board and defined in the federal deposit insurance corporation improvement act of 1991 .",
+   "state street bank must meet the regulatory capital thresholds for 2018 2018well capitalized 2019 2019 in order for the parent company to maintain its status as a financial holding company. ."
+  ],
+  "table": [
+   [
+    "( in millions )",
+    "2007",
+    "2006",
+    "2005"
+   ],
+   [
+    "united kingdom",
+    "$ 5951",
+    "$ 5531",
+    "$ 2696"
+   ],
+   [
+    "canada",
+    "4565",
+    "2014",
+    "1463"
+   ],
+   [
+    "australia",
+    "3567",
+    "1519",
+    "1441"
+   ],
+   [
+    "netherlands",
+    "2014",
+    "2014",
+    "992"
+   ],
+   [
+    "germany",
+    "2944",
+    "2696",
+    "4217"
+   ],
+   [
+    "total cross-border outstandings",
+    "$ 17027",
+    "$ 9746",
+    "$ 10809"
+   ]
+  ],
+  "qa": {
+   "question": "what are the total consolidated assets in 2006?",
+   "program": "divide(9746, 9%)",
+   "exe_ans": 108288.88889,
+   "gold_inds": {
+    "table_6": "( in millions ) the total cross-border outstandings of 2007 is $ 17027 ; the total cross-border outstandings of 2006 is $ 9746 ; the total cross-border outstandings of 2005 is $ 10809 ;",
+    "text_1": "the total cross-border outstandings presented in the table represented 12% ( 12 % ) , 9% ( 9 % ) and 11% ( 11 % ) of our consolidated total assets as of december 31 , 2007 , 2006 and 2005 , respectively ."
+   }
+  }
+ },
+ {
+  "id": "ANET/2017/page_156.pdf-4",
+  "filename": "ANET/2017/page_156.pdf",
+  "pre_text": [
+   "as of december 31 , 2017 , the aggregate future minimum payments under non-cancelable operating leases consist of the following ( in thousands ) : years ending december 31 ."
+  ],
+  "post_text": [
+   "rent expense for all operating leases amounted to $ 9.4 million , $ 8.1 million and $ 5.4 million for the years ended december 31 , 2017 , 2016 and 2015 , respectively .",
+   "financing obligation 2014build-to-suit lease in august 2012 , we executed a lease for a building then under construction in santa clara , california to serve as our headquarters .",
+   "the lease term is 120 months and commenced in august 2013 .",
+   "based on the terms of the lease agreement and due to our involvement in certain aspects of the construction , we were deemed the owner of the building ( for accounting purposes only ) during the construction period .",
+   "upon completion of construction in 2013 , we concluded that we had forms of continued economic involvement in the facility , and therefore did not meet with the provisions for sale-leaseback accounting .",
+   "we continue to maintain involvement in the property post construction and lack transferability of the risks and rewards of ownership , due to our required maintenance of a $ 4.0 million letter of credit , in addition to our ability and option to sublease our portion of the leased building for fees substantially higher than our base rate .",
+   "therefore , the lease is accounted for as a financing obligation and lease payments will be attributed to ( 1 ) a reduction of the principal financing obligation ; ( 2 ) imputed interest expense ; and ( 3 ) land lease expense , representing an imputed cost to lease the underlying land of the building .",
+   "at the conclusion of the initial lease term , we will de-recognize both the net book values of the asset and the remaining financing obligation .",
+   "as of december 31 , 2017 and 2016 , we have recorded assets of $ 53.4 million , representing the total costs of the building and improvements incurred , including the costs paid by the lessor ( the legal owner of the building ) and additional improvement costs paid by us , and a corresponding financing obligation of $ 39.6 million and $ 41.2 million , respectively .",
+   "as of december 31 , 2017 , $ 1.9 million and $ 37.7 million were recorded as short-term and long-term financing obligations , respectively .",
+   "land lease expense under our lease financing obligation amounted to $ 1.3 million for each of the years ended december 31 , 2017 , 2016 and 2015 respectively. ."
+  ],
+  "table": [
+   [
+    "2018",
+    "$ 9127"
+   ],
+   [
+    "2019",
+    "8336"
+   ],
+   [
+    "2020",
+    "8350"
+   ],
+   [
+    "2021",
+    "7741"
+   ],
+   [
+    "2022",
+    "7577"
+   ],
+   [
+    "thereafter",
+    "9873"
+   ],
+   [
+    "total minimum future lease payments",
+    "$ 51004"
+   ]
+  ],
+  "qa": {
+   "question": "what are the total financial obligations as of december 31 , 2107?",
+   "program": "add(1.9, 37.7)",
+   "exe_ans": 39.6,
+   "gold_inds": {
+    "text_10": "as of december 31 , 2017 , $ 1.9 million and $ 37.7 million were recorded as short-term and long-term financing obligations , respectively ."
+   }
+  }
+ },
+ {
+  "id": "AWK/2018/page_150.pdf-3",
+  "filename": "AWK/2018/page_150.pdf",
+  "pre_text": [
+   "the following table provides the weighted average assumptions used in the black-scholes option-pricing model for grants and the resulting weighted average grant date fair value per share of stock options granted for the years ended december 31: ."
+  ],
+  "post_text": [
+   "stock units during 2018 , 2017 and 2016 , the company granted rsus to certain employees under the 2007 plan and 2017 omnibus plan , as applicable .",
+   "rsus generally vest based on continued employment with the company over periods ranging from one to three years. ."
+  ],
+  "table": [
+   [
+    "",
+    "2018",
+    "2017",
+    "2016"
+   ],
+   [
+    "intrinsic value",
+    "$ 9",
+    "$ 10",
+    "$ 18"
+   ],
+   [
+    "exercise proceeds",
+    "7",
+    "11",
+    "15"
+   ],
+   [
+    "income tax benefit realized",
+    "2",
+    "3",
+    "6"
+   ]
+  ],
+  "qa": {
+   "question": "what was average income tax benefit realized for the three year period?",
+   "program": "table_average(income tax benefit realized, none)",
+   "exe_ans": 3.66667,
+   "gold_inds": {
+    "table_3": "the income tax benefit realized of 2018 is 2 ; the income tax benefit realized of 2017 is 3 ; the income tax benefit realized of 2016 is 6 ;"
+   }
+  }
+ },
+ {
+  "id": "IPG/2012/page_21.pdf-1",
+  "filename": "IPG/2012/page_21.pdf",
+  "pre_text": [
+   "repurchase of equity securities the following table provides information regarding our purchases of our equity securities during the period from october 1 , 2012 to december 31 , 2012 .",
+   "total number of shares ( or units ) purchased 1 average price paid per share ( or unit ) 2 total number of shares ( or units ) purchased as part of publicly announced plans or programs 3 maximum number ( or approximate dollar value ) of shares ( or units ) that may yet be purchased under the plans or programs 3 ."
+  ],
+  "post_text": [
+   "1 includes shares of our common stock , par value $ 0.10 per share , withheld under the terms of grants under employee stock-based compensation plans to offset tax withholding obligations that occurred upon vesting and release of restricted shares ( the 201cwithheld shares 201d ) .",
+   "we repurchased 13566 withheld shares in october 2012 , 1419 withheld shares in november 2012 and 7959 withheld shares in december 2012 , for a total of 22944 withheld shares during the three-month period .",
+   "2 the average price per share for each of the months in the fiscal quarter and for the three-month period was calculated by dividing the sum of the applicable period of the aggregate value of the tax withholding obligations and the aggregate amount we paid for shares acquired under our stock repurchase program , described in note 5 to the consolidated financial statements , by the sum of the number of withheld shares and the number of shares acquired in our stock repurchase program .",
+   "3 on february 24 , 2012 , we announced in a press release that our board had approved a share repurchase program to repurchase from time to time up to $ 300.0 million of our common stock ( the 201c2012 share repurchase program 201d ) , in addition to amounts available on existing authorizations .",
+   "on november 20 , 2012 , we announced in a press release that our board had authorized an increase in our 2012 share repurchase program to $ 400.0 million of our common stock .",
+   "on february 22 , 2013 , we announced that our board had approved a new share repurchase program to repurchase from time to time up to $ 300.0 million of our common stock .",
+   "the new authorization is in addition to any amounts remaining available for repurchase under the 2012 share repurchase program .",
+   "there is no expiration date associated with the share repurchase programs. ."
+  ],
+  "table": [
+   [
+    "",
+    "total number ofshares ( or units ) purchased1",
+    "average price paidper share ( or unit ) 2",
+    "total number ofshares ( or units ) purchased as part ofpublicly announcedplans or programs3",
+    "maximum number ( or approximate dollar value ) of shares ( or units ) that mayyet be purchased under theplans or programs3"
+   ],
+   [
+    "october 1 - 31",
+    "13566",
+    "$ 10.26",
+    "0",
+    "$ 148858924"
+   ],
+   [
+    "november 1 - 30",
+    "5345171",
+    "$ 9.98",
+    "5343752",
+    "$ 195551133"
+   ],
+   [
+    "december 1 - 31",
+    "8797959",
+    "$ 10.87",
+    "8790000",
+    "$ 99989339"
+   ],
+   [
+    "total",
+    "14156696",
+    "$ 10.53",
+    "14133752",
+    ""
+   ]
+  ],
+  "qa": {
+   "question": "what percentage of total shares were purchased in october?",
+   "program": "divide(13566, 14156696), multiply(#0, const_100)",
+   "exe_ans": 0.09583,
+   "gold_inds": {
+    "table_1": "the october 1 - 31 of total number ofshares ( or units ) purchased1 is 13566 ; the october 1 - 31 of average price paidper share ( or unit ) 2 is $ 10.26 ; the october 1 - 31 of total number ofshares ( or units ) purchased as part ofpublicly announcedplans or programs3 is 0 ; the october 1 - 31 of maximum number ( or approximate dollar value ) of shares ( or units ) that mayyet be purchased under theplans or programs3 is $ 148858924 ;",
+    "table_4": "the total of total number ofshares ( or units ) purchased1 is 14156696 ; the total of average price paidper share ( or unit ) 2 is $ 10.53 ; the total of total number ofshares ( or units ) purchased as part ofpublicly announcedplans or programs3 is 14133752 ; the total of maximum number ( or approximate dollar value ) of shares ( or units ) that mayyet be purchased under theplans or programs3 is ;",
+    "text_1": "total number of shares ( or units ) purchased 1 average price paid per share ( or unit ) 2 total number of shares ( or units ) purchased as part of publicly announced plans or programs 3 maximum number ( or approximate dollar value ) of shares ( or units ) that may yet be purchased under the plans or programs 3 ."
+   }
+  }
+ }
+]
