@@ -1,0 +1,63 @@
+{
+  "split": "dev",
+  "seed": 0,
+  "examples": 873,
+  "mode_a_output_faults": {
+    "digit_change": {
+      "cases": 873,
+      "detected": 873,
+      "detected_as_expected": 873,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "sign_flip": {
+      "cases": 873,
+      "detected": 873,
+      "detected_as_expected": 873,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "wrong_column": {
+      "cases": 535,
+      "detected": 535,
+      "detected_as_expected": 535,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "wrong_row": {
+      "cases": 674,
+      "detected": 674,
+      "detected_as_expected": 674,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "scale_error": {
+      "cases": 872,
+      "detected": 872,
+      "detected_as_expected": 872,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "hardcoded_answer": {
+      "cases": 851,
+      "detected": 851,
+      "detected_as_expected": 851,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "disguised_constant": {
+      "cases": 863,
+      "detected": 863,
+      "detected_as_expected": 863,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    },
+    "percent_as_fraction": {
+      "cases": 43,
+      "detected": 43,
+      "detected_as_expected": 43,
+      "detection_rate": 1.0,
+      "expected_code_rate": 1.0
+    }
+  }
+}
