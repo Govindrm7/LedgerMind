@@ -11,6 +11,24 @@ A 4B open model, fine tuned with SFT and then GRPO against a verifier, answers F
 
 ![Accuracy against cost per 1,000 queries](docs/figures/accuracy_vs_cost.png)
 
+## Live demo
+
+Screenshots of the trained model answering live on one NVIDIA H200 through vLLM (Slurm job 10969910, 10 October 2026), rendered by the demo page in [`serving/demo`](serving/demo). Each answer took about half a second.
+
+**A question that is not in the dataset.** Asked what share of AES's scheduled debt maturities falls due in 2003, the model cites the 2003 row (2,323) and the total (22,258), the executor computes 0.104, and the verifier accepts it.
+
+![Live answer to a custom question](docs/figures/demo/1_custom_question.png)
+
+**A counterfactual filing.** The amortization figure was edited from $12 million to $13 million. The model reads the edited document and answers 21, not the real filing's 20.
+
+![Live answer on a counterfactual document](docs/figures/demo/2_counterfactual_document.png)
+
+**A refusal.** This filing's table was flattened into one row in the dataset, and the model cites a cell that does not exist. The verifier rejects the answer as a bad pointer instead of returning it, even though the number happens to equal the true percentage change (FinQA's gold label for this question is itself wrong).
+
+![Live rejection of an untraceable citation](docs/figures/demo/3_rejected_bad_pointer.png)
+
+To run it yourself on a cluster: `sbatch slurm/demo.sbatch`, then tunnel to the port the job log prints.
+
 ## For finance readers
 
 [FinQA](https://github.com/czyssrs/FinQA) is a public benchmark of about 8,000 questions written by finance professionals over real S&P 500 earnings reports: a table from a 10-K plus the surrounding text, and a question that needs one to several calculation steps. A typical answer from LedgerMind looks like this:
