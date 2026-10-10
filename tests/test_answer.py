@@ -1,6 +1,6 @@
 import pytest
 
-from ledgermind.eval.answer import answers_match
+from ledgermind.eval.answer import answers_match, answers_match_stated
 
 
 @pytest.mark.parametrize(
@@ -32,3 +32,22 @@ def test_boolean_matching():
 def test_unknown_mode():
     with pytest.raises(ValueError):
         answers_match(1.0, 1.0, "fuzzy")
+
+
+@pytest.mark.parametrize(
+    "pred, decimals, gold, mode, expected",
+    [
+        (1.64, 2, 1.63657, "strict", True),  # gold rounded to the two decimals stated
+        (27.81, 2, 27.80639, "strict", True),
+        (7.2, 1, 0.07157, "scale", True),  # 7.2% stated for a fraction gold
+        (7.2, 1, 0.07157, "strict", False),
+        (13.2, 1, 0.12027, "scale", False),  # a genuinely wrong answer stays wrong
+        (7.0, 0, 7.16, "strict", False),  # one significant digit is too coarse
+        (0.35030674846625767, None, 0.3510, "strict", False),  # computed: ordinary match
+        (0.35030674846625767, None, 0.35031, "strict", True),
+        (None, 2, 1.0, "strict", False),
+        (True, None, True, "strict", True),
+    ],
+)
+def test_answers_match_stated(pred, decimals, gold, mode, expected):
+    assert answers_match_stated(pred, decimals, gold, mode) is expected

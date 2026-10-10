@@ -4,7 +4,12 @@ import pytest
 
 from ledgermind.data.convert import ConvertedExample
 from ledgermind.document import Document
-from ledgermind.eval.harness import evaluate, oracle_predictions, parse_direct_answer
+from ledgermind.eval.harness import (
+    evaluate,
+    oracle_predictions,
+    parse_direct_answer,
+    parse_direct_answer_stated,
+)
 from ledgermind.schema import Answer, Evidence, TableSource, to_json
 
 DOC = Document.build(
@@ -107,3 +112,32 @@ def test_direct_scoring_and_counterfactual_recall():
     assert rows[1].recalled_original
     assert summary["recalled_original_rate"]["mean"] == 0.5
     json.dumps(summary)
+
+
+@pytest.mark.parametrize(
+    "text, value, decimals",
+    [
+        ("so 1432 / 875 = 1.6377, about 1.64.\n\nAnswer: 1.64", 1.64, 2),
+        ("Answer: 7.2", 7.2, 1),
+        ("Answer: -23,158", -23158, 0),
+        ("Answer: 57100/163000", 57100 / 163000, None),
+        ("Final answer: yes", True, None),
+        ("no idea", None, None),
+    ],
+)
+def test_parse_direct_answer_stated(text, value, decimals):
+    got_value, got_decimals = parse_direct_answer_stated(text)
+    assert got_value == pytest.approx(value) if isinstance(value, float) else got_value == value
+    assert got_decimals == decimals
+
+
+def test_stated_precision_scoring_credits_rounded_answers_only():
+    gold = EXAMPLES[0].gold_answer  # 0.01639...
+    preds = {"T-0": {"completion": f"Answer: {gold:.3f}"}}  # 0.016: two significant digits
+    default, _ = evaluate(EXAMPLES[:1], preds, direct=True)
+    stated, _ = evaluate(EXAMPLES[:1], preds, direct=True, stated_precision=True)
+    assert default["verified_accuracy"]["mean"] == 0.0
+    assert stated["verified_accuracy"]["mean"] == 1.0
+    too_coarse = {"T-0": {"completion": f"Answer: {gold:.2f}"}}  # 0.02: one digit
+    coarse, _ = evaluate(EXAMPLES[:1], too_coarse, direct=True, stated_precision=True)
+    assert coarse["verified_accuracy"]["mean"] == 0.0

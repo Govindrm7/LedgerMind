@@ -40,7 +40,7 @@ from pathlib import Path
 
 from ledgermind.data.convert import ConvertedExample
 from ledgermind.data.prepare import from_record
-from ledgermind.eval.answer import MatchMode, answers_match
+from ledgermind.eval.answer import MatchMode, answers_match, answers_match_stated
 from ledgermind.eval.stats import bootstrap_ci, percentile
 from ledgermind.numbers import extract_numbers
 from ledgermind.schema import to_json
@@ -102,6 +102,32 @@ def parse_direct_answer(text: str) -> float | bool | None:
     return m.value
 
 
+_FRACTION = re.compile(r"^\$?\s*(-?\d[\d,]*\.?\d*)\s*/\s*(-?\d[\d,]*\.?\d*)\s*%?$")
+
+
+def parse_direct_answer_stated(text: str) -> tuple[float | bool | None, int | None]:
+    """Like ``parse_direct_answer``, plus the number of decimals the answer was written with.
+
+    A final answer written as a simple fraction ("57100/163000") is evaluated, and its
+    decimals are None because the value is computed rather than stated.
+    """
+    lines = _ANSWER_LINE.findall(text)
+    tail = lines[-1] if lines else text
+    lowered = tail.strip().lower().rstrip(".")
+    if (bool(lines) or lowered in ("yes", "no")) and re.match(r"^(yes|no)\b", lowered):
+        return lowered.startswith("yes"), None
+    fraction = _FRACTION.match(lowered) if lines else None
+    if fraction:
+        num, den = (float(x.replace(",", "")) for x in fraction.groups())
+        return (num / den if den else None), None
+    mentions = extract_numbers(tail)
+    if not mentions:
+        return None, None
+    m = mentions[0] if lines else mentions[-1]
+    digits = re.sub(r"[^\d.]", "", tail[m.start : m.end])
+    return m.value, len(digits.split(".", 1)[1]) if "." in digits else 0
+
+
 def score_pipeline(
     ex: ConvertedExample, pred: dict | None, original: float | bool | None, issues=None
 ) -> Row:
@@ -129,14 +155,26 @@ def score_pipeline(
     )
 
 
-def score_direct(ex: ConvertedExample, pred: dict | None, original: float | bool | None) -> Row:
-    value = parse_direct_answer((pred or {}).get("completion", ""))
+def score_direct(
+    ex: ConvertedExample,
+    pred: dict | None,
+    original: float | bool | None,
+    stated_precision: bool = False,
+) -> Row:
+    text = (pred or {}).get("completion", "")
+    if stated_precision:
+        value, decimals = parse_direct_answer_stated(text)
+
+        def match(v, gold, mode):
+            return answers_match_stated(v, decimals, gold, mode)
+    else:
+        value, match = parse_direct_answer(text), answers_match
     return Row(
         id=ex.id,
         status="direct",
         value=value,
-        correct_strict=answers_match(value, ex.gold_answer, "strict"),
-        correct_scale=answers_match(value, ex.gold_answer, "scale"),
+        correct_strict=match(value, ex.gold_answer, "strict"),
+        correct_scale=match(value, ex.gold_answer, "scale"),
         accepted=value is not None,
         parsed=value is not None,
         abstained=False,
@@ -144,8 +182,8 @@ def score_direct(ex: ConvertedExample, pred: dict | None, original: float | bool
         reasons=[],
         recalled_original=original is not None
         and value is not None
-        and answers_match(value, original, "scale")
-        and not answers_match(value, ex.gold_answer, "scale"),
+        and match(value, original, "scale")
+        and not match(value, ex.gold_answer, "scale"),
         latency_s=(pred or {}).get("latency_s"),
         completion_tokens=(pred or {}).get("completion_tokens"),
     )
@@ -200,6 +238,7 @@ def evaluate(
     *,
     direct: bool = False,
     originals: dict[str, float | bool] | None = None,
+    stated_precision: bool = False,
 ) -> tuple[dict, list[Row]]:
     originals = originals or {}
     rows = []
@@ -207,7 +246,7 @@ def evaluate(
         pred = predictions.get(ex.id)
         original = originals.get(ex.id)
         if direct:
-            rows.append(score_direct(ex, pred, original))
+            rows.append(score_direct(ex, pred, original, stated_precision))
         else:
             rows.append(score_pipeline(ex, pred, original, check_integrity(ex.document)))
     return summarize(rows, examples, counterfactual=bool(originals)), rows
@@ -224,6 +263,11 @@ def main(argv: list[str] | None = None) -> dict:
     parser.add_argument("--predictions", type=Path)
     parser.add_argument("--oracle", action="store_true", help="score gold targets")
     parser.add_argument("--direct", action="store_true", help="free form answers")
+    parser.add_argument(
+        "--stated-precision",
+        action="store_true",
+        help="direct answers match at the precision they state; fractions are evaluated",
+    )
     parser.add_argument("--name", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--rows", type=Path, help="optional per question JSONL")
@@ -237,8 +281,23 @@ def main(argv: list[str] | None = None) -> dict:
     else:
         parser.error("pass --predictions or --oracle")
 
-    summary, rows = evaluate(examples, predictions, direct=args.direct, originals=originals)
-    summary = {"system": args.name, "examples": str(args.examples), **summary}
+    if args.stated_precision and not args.direct:
+        parser.error("--stated-precision applies to --direct runs only")
+    summary, rows = evaluate(
+        examples,
+        predictions,
+        direct=args.direct,
+        originals=originals,
+        stated_precision=args.stated_precision,
+    )
+    summary = {
+        "system": args.name,
+        "examples": str(args.examples),
+        "direct_matching": ("stated_precision" if args.stated_precision else "default")
+        if args.direct
+        else None,
+        **summary,
+    }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2) + "\n")
     if args.rows:

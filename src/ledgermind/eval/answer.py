@@ -10,6 +10,11 @@ Two modes, applied identically to every system:
   correct answer in the other convention from being scored as wrong.
 
 Boolean questions match only a boolean prediction with the same value.
+
+Direct (free text) baselines can also be scored at the precision they state
+(``answers_match_stated``): "1.64" counts as a match for 1.63657 because that is the gold
+value rounded to the two decimals given. Pipeline answers are computed exactly by the
+executor, so the rule only matters for answers a model writes out itself.
 """
 
 from __future__ import annotations
@@ -39,3 +44,26 @@ def answers_match(
     if mode == "scale":
         return any(_close(pred, g) for g in (gold, gold * 100, gold / 100))
     raise ValueError(f"unknown match mode: {mode}")
+
+
+def answers_match_stated(
+    pred: float | bool | None,
+    decimals: int | None,
+    gold: float | bool,
+    mode: MatchMode = "strict",
+) -> bool:
+    """Match at the stated precision: ``pred`` is the gold value rounded to ``decimals``.
+
+    The stated number must carry at least two significant digits, so a bare "7" cannot
+    match 7.16. ``decimals`` is None for a value that was computed rather than written out
+    (a fraction such as 57100/163000), which then needs an ordinary match.
+    """
+    if answers_match(pred, gold, mode):
+        return True
+    if decimals is None or pred is None or isinstance(pred, bool) or isinstance(gold, bool):
+        return False
+    if len(str(abs(round(pred * 10**decimals))).lstrip("0")) < 2:
+        return False
+    half_unit = 0.5 * 10.0**-decimals
+    golds = (gold,) if mode == "strict" else (gold, gold * 100, gold / 100)
+    return any(abs(pred - g) <= half_unit * (1 + 1e-9) for g in golds)
