@@ -29,3 +29,5 @@ logs/
 # Secrets
 .env
 .env.*
+api_keys
+api_keys.*
