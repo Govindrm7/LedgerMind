@@ -15,6 +15,11 @@ from ledgermind.eval.answer import answers_match, answers_match_stated
         (5830.0, 5829.0, False, False),
         (0.0, 0.0, True, True),
         (None, 1.0, False, False),
+        # percent answer for a five decimal fraction gold: tolerance follows the gold's units
+        (1.7144688351225765, 0.01714, False, True),
+        (1.7413688673531194, 0.01741, False, True),
+        (1.72, 0.01714, False, False),
+        (26.0, 2600.0, False, True),
     ],
 )
 def test_numeric_matching(pred, gold, strict, scale):

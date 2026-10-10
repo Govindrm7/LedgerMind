@@ -5,9 +5,12 @@ Two modes, applied identically to every system:
 * ``strict``: the predicted value matches the gold value within
   ``max(ABS_TOL, REL_TOL * |gold|)``. FinQA gold answers are rounded to five decimals,
   so ``ABS_TOL`` is 1e-5.
-* ``scale``: strict match against the gold value, ``gold * 100`` or ``gold / 100``.
-  FinQA often stores percentages as fractions (0.0162 for 1.62%), and this mode stops a
-  correct answer in the other convention from being scored as wrong.
+* ``scale``: strict match against the gold value with the prediction read as is, divided
+  by 100 or multiplied by 100. FinQA often stores percentages as fractions (0.0162 for
+  1.62%), and this mode stops a correct answer in the other convention from being scored
+  as wrong. The comparison happens in the gold value's own units, so the tolerance tracks
+  the gold's five decimal rounding (1.71447 matches 0.01714, whose rounding error grows to
+  5e-4 when multiplied by 100).
 
 Boolean questions match only a boolean prediction with the same value.
 
@@ -42,7 +45,7 @@ def answers_match(
     if mode == "strict":
         return _close(pred, gold)
     if mode == "scale":
-        return any(_close(pred, g) for g in (gold, gold * 100, gold / 100))
+        return any(_close(p, gold) for p in (pred, pred / 100, pred * 100))
     raise ValueError(f"unknown match mode: {mode}")
 
 
@@ -65,5 +68,6 @@ def answers_match_stated(
     if len(str(abs(round(pred * 10**decimals))).lstrip("0")) < 2:
         return False
     half_unit = 0.5 * 10.0**-decimals
-    golds = (gold,) if mode == "strict" else (gold, gold * 100, gold / 100)
-    return any(abs(pred - g) <= half_unit * (1 + 1e-9) for g in golds)
+    factors = (1.0,) if mode == "strict" else (1.0, 100.0, 0.01)
+    # pred is compared with gold * factor; the gold's own rounding scales with the factor
+    return any(abs(pred - gold * f) <= half_unit * (1 + 1e-9) + ABS_TOL * f for f in factors)
