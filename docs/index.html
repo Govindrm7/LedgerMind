@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LedgerMind Results</title>
+  <meta name="description" content="A 4B model that proposes, a deterministic engine that computes, and a verifier that decides every number. Results on FinQA.">
+  <link rel="stylesheet" href="dashboard/style.css">
+  <script>
+    try {
+      const saved = localStorage.getItem("ledgermind-theme");
+      if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+    } catch (e) { /* storage unavailable: keep the default */ }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">LEDGERMIND <span>verified financial QA</span></div>
+      <nav class="nav" aria-label="Sections">
+        <a href="#overview">Overview</a>
+        <a href="#models">Models</a>
+        <a href="#rl">GRPO</a>
+        <a href="#serving">Serving</a>
+        <a href="#saboteur">Saboteur</a>
+        <a href="#explorer">Audit explorer</a>
+        <a href="#method">Method</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" type="button">Light mode</button>
+    </div>
+    <div class="ticker"><div class="ticker-inner" id="ticker"></div></div>
+  </header>
+
+  <main>
+    <section id="overview">
+      <div class="section-head"><h2>Overview</h2>
+        <p>The model proposes cited figures and a plan, a deterministic engine computes, a verifier decides.</p></div>
+      <div class="hero">
+        <div class="panel" id="hero"></div>
+        <div class="grid kpis" id="kpis"></div>
+      </div>
+    </section>
+
+    <section id="models">
+      <div class="section-head"><h2>Models</h2>
+        <p id="models-sub"></p></div>
+      <div class="grid two">
+        <div class="panel" id="panel-scatter"></div>
+        <div class="panel" id="panel-bars"></div>
+      </div>
+      <div class="panel" id="panel-fulltest" style="margin-top:12px"></div>
+    </section>
+
+    <section id="rl">
+      <div class="section-head"><h2>GRPO with verifier rewards</h2>
+        <p>What reinforcement learning changed, measured greedy and sampled on the same 1,139 test questions.</p></div>
+      <div class="grid two">
+        <div class="panel" id="panel-sharpen"></div>
+        <div class="panel" id="panel-consistency"></div>
+      </div>
+      <div class="grid three" style="margin-top:12px" id="training-multiples"></div>
+    </section>
+
+    <section id="serving">
+      <div class="section-head"><h2>Serving</h2>
+        <p>vLLM on one H200, 256 requests per concurrency level, after a warmup.</p></div>
+      <div class="grid two">
+        <div class="panel" id="panel-throughput"></div>
+        <div class="panel" id="panel-latency"></div>
+      </div>
+    </section>
+
+    <section id="saboteur">
+      <div class="section-head"><h2>Saboteur</h2>
+        <p>Adversarial tests of the verifier: corrupted outputs, tampered documents, counterfactual filings.</p></div>
+      <div class="grid three" id="saboteur-panels"></div>
+    </section>
+
+    <section id="explorer">
+      <div class="section-head"><h2>Audit explorer</h2>
+        <p>Pick a test question to see the cited cells, the plan, the executed value and the verifier's verdict.</p></div>
+      <div class="explorer">
+        <div class="panel q-list" id="q-list" role="listbox" aria-label="Questions"></div>
+        <div class="panel" id="q-detail"></div>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="section-head"><h2>Method and caveats</h2></div>
+      <div class="panel" id="method-notes"></div>
+    </section>
+  </main>
+
+  <div class="footer" id="footer"></div>
+  <div class="tooltip" id="tooltip" role="status"></div>
+  <script src="dashboard/app.js"></script>
+</body>
+</html>
