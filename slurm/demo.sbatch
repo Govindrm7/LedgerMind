@@ -19,11 +19,13 @@ lm_activate
 
 MODEL="${1:-checkpoints/grpo_qwen3_4b_merged}"
 MINUTES="${2:-80}"
+VARIANT="${VARIANT:-bf16}"   # fp16 on GPUs without bf16 (V100, T4)
 VLLM_PORT=$((8000 + SLURM_JOB_ID % 1000))
 DEMO_PORT=$((VLLM_PORT + 1000))
 
-echo "model $MODEL node $(hostname) vllm $VLLM_PORT demo $DEMO_PORT git $(git rev-parse --short HEAD)"
-serving/launch_vllm.sh "$MODEL" bf16 "$VLLM_PORT" > "logs/vllm-$SLURM_JOB_ID.log" 2>&1 &
+echo "model $MODEL variant $VARIANT node $(hostname) vllm $VLLM_PORT demo $DEMO_PORT git $(git rev-parse --short HEAD)"
+nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
+serving/launch_vllm.sh "$MODEL" "$VARIANT" "$VLLM_PORT" > "logs/vllm-$SLURM_JOB_ID.log" 2>&1 &
 SERVER=$!
 trap 'kill $SERVER $DEMO 2>/dev/null || true' EXIT
 until curl -sf "http://localhost:$VLLM_PORT/health" >/dev/null; do

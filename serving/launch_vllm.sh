@@ -5,6 +5,7 @@
 #
 # Variants:
 #   bf16   full precision weights (baseline)
+#   fp16   half precision, for GPUs without bf16 support (V100, T4)
 #   fp8    dynamic FP8 weights and activations; real speedups need Hopper (H100) or newer
 #   awq    a checkpoint already quantized with AWQ (pass its path as the model)
 #
@@ -30,6 +31,7 @@ ARGS=(
 
 case "$VARIANT" in
   bf16) ARGS+=(--dtype bfloat16) ;;
+  fp16) ARGS+=(--dtype float16) ;;
   fp8)  ARGS+=(--dtype bfloat16 --quantization fp8) ;;
   awq)  ARGS+=(--quantization awq_marlin) ;;
   *) echo "unknown variant: $VARIANT" >&2; exit 2 ;;
