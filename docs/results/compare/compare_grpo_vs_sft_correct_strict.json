@@ -1,0 +1,19 @@
+{
+  "a": "grpo",
+  "b": "sft",
+  "metric": "correct_strict",
+  "n": 1139,
+  "accuracy_a": 0.7296,
+  "accuracy_b": 0.7305,
+  "paired_bootstrap": {
+    "diff": -0.0009,
+    "low": -0.0097,
+    "high": 0.0079,
+    "p_value": 0.9275
+  },
+  "mcnemar": {
+    "only_a": 12,
+    "only_b": 13,
+    "p_value": 1.0
+  }
+}

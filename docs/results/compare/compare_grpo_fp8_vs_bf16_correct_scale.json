@@ -1,0 +1,19 @@
+{
+  "a": "grpo_fp8",
+  "b": "grpo_bf16",
+  "metric": "correct_scale",
+  "n": 1139,
+  "accuracy_a": 0.7489,
+  "accuracy_b": 0.7489,
+  "paired_bootstrap": {
+    "diff": 0.0,
+    "low": -0.007,
+    "high": 0.0061,
+    "p_value": 1.0
+  },
+  "mcnemar": {
+    "only_a": 7,
+    "only_b": 7,
+    "p_value": 1.0
+  }
+}

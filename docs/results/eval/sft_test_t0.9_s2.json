@@ -1,0 +1,46 @@
+{
+  "system": "sft_t0.9_s2",
+  "examples": "data/processed/finqa/test.jsonl",
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.6488,
+    "low": 0.6216,
+    "high": 0.6769
+  },
+  "verified_accuracy": {
+    "mean": 0.6629,
+    "low": 0.6365,
+    "high": 0.6901
+  },
+  "ungated_accuracy": {
+    "mean": 0.6787,
+    "low": 0.6523,
+    "high": 0.705
+  },
+  "coverage": {
+    "mean": 0.9491,
+    "low": 0.9359,
+    "high": 0.9614
+  },
+  "selective_accuracy": {
+    "mean": 0.6984,
+    "low": 0.6716,
+    "high": 0.7262
+  },
+  "parse_rate": 1.0,
+  "abstain_rate": 0.0,
+  "fabrication_rate": 0.0342,
+  "rejection_reasons": {
+    "misattributed": 23,
+    "fabricated": 13,
+    "bypass": 10,
+    "source_footing_broken": 8,
+    "bad_pointer": 3,
+    "scale_mismatch": 1
+  },
+  "latency_s": {
+    "p50": 2.2258,
+    "p95": 3.2655
+  },
+  "completion_tokens_mean": 165.7
+}

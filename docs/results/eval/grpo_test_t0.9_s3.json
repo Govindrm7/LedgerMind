@@ -1,0 +1,46 @@
+{
+  "system": "grpo_t0.9_s3",
+  "examples": "data/processed/finqa/test.jsonl",
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.7147,
+    "low": 0.6892,
+    "high": 0.741
+  },
+  "verified_accuracy": {
+    "mean": 0.7313,
+    "low": 0.7059,
+    "high": 0.7568
+  },
+  "ungated_accuracy": {
+    "mean": 0.7428,
+    "low": 0.7173,
+    "high": 0.7682
+  },
+  "coverage": {
+    "mean": 0.9701,
+    "low": 0.9605,
+    "high": 0.9798
+  },
+  "selective_accuracy": {
+    "mean": 0.7538,
+    "low": 0.7294,
+    "high": 0.7783
+  },
+  "parse_rate": 1.0,
+  "abstain_rate": 0.0,
+  "fabrication_rate": 0.0193,
+  "rejection_reasons": {
+    "misattributed": 10,
+    "source_footing_broken": 8,
+    "fabricated": 7,
+    "bad_pointer": 5,
+    "scale_mismatch": 3,
+    "unit_mismatch": 1
+  },
+  "latency_s": {
+    "p50": 2.1942,
+    "p95": 3.1111
+  },
+  "completion_tokens_mean": 165.4
+}

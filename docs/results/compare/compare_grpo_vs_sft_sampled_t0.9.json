@@ -1,0 +1,17 @@
+{
+  "temperature": 0.9,
+  "seeds": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "pooled_grpo_minus_sft": {
+    "diff": 0.0711,
+    "low": 0.0601,
+    "high": 0.0823,
+    "p_value": 0.0005
+  },
+  "sft_mean": 0.6650750000000001,
+  "grpo_mean": 0.736175
+}

@@ -1,0 +1,19 @@
+{
+  "a": "sft",
+  "b": "base",
+  "metric": "correct_strict",
+  "n": 1139,
+  "accuracy_a": 0.7305,
+  "accuracy_b": 0.1212,
+  "paired_bootstrap": {
+    "diff": 0.6093,
+    "low": 0.5795,
+    "high": 0.64,
+    "p_value": 0.0005
+  },
+  "mcnemar": {
+    "only_a": 706,
+    "only_b": 12,
+    "p_value": 0.0
+  }
+}

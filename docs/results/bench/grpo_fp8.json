@@ -1,0 +1,47 @@
+{
+  "model": "ledgermind",
+  "label": "grpo_fp8",
+  "constrained": false,
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 256,
+      "errors": 0,
+      "wall_s": 127.413,
+      "requests_per_s": 2.009,
+      "output_tokens_per_s": 334.2,
+      "latency_p50_s": 0.4731,
+      "latency_p95_s": 0.6942
+    },
+    {
+      "concurrency": 4,
+      "requests": 256,
+      "errors": 0,
+      "wall_s": 33.614,
+      "requests_per_s": 7.616,
+      "output_tokens_per_s": 1267.0,
+      "latency_p50_s": 0.4965,
+      "latency_p95_s": 0.7147
+    },
+    {
+      "concurrency": 16,
+      "requests": 256,
+      "errors": 0,
+      "wall_s": 11.318,
+      "requests_per_s": 22.619,
+      "output_tokens_per_s": 3774.3,
+      "latency_p50_s": 0.6539,
+      "latency_p95_s": 0.9654
+    },
+    {
+      "concurrency": 64,
+      "requests": 256,
+      "errors": 0,
+      "wall_s": 5.254,
+      "requests_per_s": 48.726,
+      "output_tokens_per_s": 8132.2,
+      "latency_p50_s": 1.0781,
+      "latency_p95_s": 1.5873
+    }
+  ]
+}
