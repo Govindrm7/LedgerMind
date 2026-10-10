@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LedgerMind Live</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 6px; }
+    .ask { display: flex; gap: 8px; margin: 6px 0 12px; flex-wrap: wrap; }
+    .ask input {
+      flex: 1; min-width: 240px; background: var(--surface-2); color: var(--text-primary); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 11px; font: inherit;
+    }
+    .run {
+      background: var(--series-1); color: #fff; border: 0; border-radius: 8px; padding: 9px 16px;
+      font: inherit; font-weight: 600; cursor: pointer;
+    }
+    .run[disabled] { opacity: 0.6; cursor: progress; }
+    .stats { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-secondary); margin: 8px 0; }
+    .stats b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+    .raw { font-family: var(--mono); font-size: 11.5px; white-space: pre-wrap; color: var(--text-secondary); max-height: 160px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">LEDGERMIND <span>live</span></div>
+      <div class="ticker-inner" id="status" style="padding:0"></div>
+    </div>
+  </header>
+  <main>
+    <section>
+      <div class="section-head"><h2>Live audit</h2>
+        <p>The model proposes cited figures and a plan; the executor computes; the verifier decides. Running now on the cluster GPU.</p></div>
+      <div class="explorer">
+        <div class="panel q-list" id="q-list" role="listbox" aria-label="Questions"></div>
+        <div class="panel" id="q-detail"></div>
+      </div>
+    </section>
+  </main>
+  <script src="/static/audit.js"></script>
+  <script src="/static/demo.js"></script>
+</body>
+</html>
