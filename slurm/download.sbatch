@@ -2,7 +2,7 @@
 # Download model weights into the Hugging Face cache on scratch before a GPU job needs them.
 #
 #   sbatch slurm/download.sbatch Qwen/Qwen3.8-27B
-#   HF_DOWNLOAD_ARGS='--exclude original/* metal/*' sbatch slurm/download.sbatch openai/gpt-oss-120b
+#   HF_DOWNLOAD_ARGS='--exclude original/* --exclude metal/*' sbatch slurm/download.sbatch openai/gpt-oss-120b
 #SBATCH --job-name=lm-download
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=8
