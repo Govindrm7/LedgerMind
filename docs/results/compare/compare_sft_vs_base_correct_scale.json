@@ -4,16 +4,16 @@
   "metric": "correct_scale",
   "n": 1139,
   "accuracy_a": 0.7445,
-  "accuracy_b": 0.2002,
+  "accuracy_b": 0.2037,
   "paired_bootstrap": {
-    "diff": 0.5443,
-    "low": 0.5127,
-    "high": 0.576,
+    "diff": 0.5408,
+    "low": 0.5083,
+    "high": 0.5733,
     "p_value": 0.0005
   },
   "mcnemar": {
-    "only_a": 638,
-    "only_b": 18,
+    "only_a": 635,
+    "only_b": 19,
     "p_value": 0.0
   }
 }

@@ -1,6 +1,7 @@
 {
-  "system": "grpo_t0.9_s2",
+  "system": "grpo_test_t0.9_s2",
   "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": null,
   "n": 1139,
   "verified_accuracy_strict": {
     "mean": 0.7155,

@@ -1,0 +1,40 @@
+{
+  "system": "gpt54mini_test_direct_stated",
+  "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": "stated_precision",
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.2818,
+    "low": 0.2546,
+    "high": 0.3082
+  },
+  "verified_accuracy": {
+    "mean": 0.6927,
+    "low": 0.6655,
+    "high": 0.7191
+  },
+  "ungated_accuracy": {
+    "mean": 0.3143,
+    "low": 0.2871,
+    "high": 0.3415
+  },
+  "coverage": {
+    "mean": 0.9895,
+    "low": 0.9833,
+    "high": 0.9947
+  },
+  "selective_accuracy": {
+    "mean": 0.7001,
+    "low": 0.6735,
+    "high": 0.7285
+  },
+  "parse_rate": 0.9895,
+  "abstain_rate": 0.0,
+  "fabrication_rate": 0.0,
+  "rejection_reasons": {},
+  "latency_s": {
+    "p50": 0.8707,
+    "p95": 1.179
+  },
+  "completion_tokens_mean": 61.7
+}

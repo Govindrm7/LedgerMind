@@ -1,6 +1,7 @@
 {
-  "system": "base_zeroshot",
+  "system": "base_zeroshot_counterfactual_test",
   "examples": "data/processed/finqa/counterfactual_test.jsonl",
+  "direct_matching": null,
   "n": 846,
   "verified_accuracy_strict": {
     "mean": 0.13,

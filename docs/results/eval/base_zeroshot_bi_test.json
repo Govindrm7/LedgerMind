@@ -1,6 +1,7 @@
 {
-  "system": "base_zeroshot_bi",
+  "system": "base_zeroshot_bi_test",
   "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": null,
   "n": 1139,
   "verified_accuracy_strict": {
     "mean": 0.1212,
@@ -8,14 +9,14 @@
     "high": 0.1396
   },
   "verified_accuracy": {
-    "mean": 0.2002,
-    "low": 0.1773,
-    "high": 0.2248
+    "mean": 0.2037,
+    "low": 0.18,
+    "high": 0.2274
   },
   "ungated_accuracy": {
-    "mean": 0.3565,
-    "low": 0.3301,
-    "high": 0.3845
+    "mean": 0.3617,
+    "low": 0.3345,
+    "high": 0.3898
   },
   "coverage": {
     "mean": 0.4118,
@@ -23,9 +24,9 @@
     "high": 0.4407
   },
   "selective_accuracy": {
-    "mean": 0.4861,
-    "low": 0.4392,
-    "high": 0.5309
+    "mean": 0.4947,
+    "low": 0.4456,
+    "high": 0.5394
   },
   "parse_rate": 0.8042,
   "abstain_rate": 0.0,

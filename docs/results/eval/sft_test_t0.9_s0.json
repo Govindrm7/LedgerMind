@@ -1,6 +1,7 @@
 {
-  "system": "sft_t0.9_s0",
+  "system": "sft_test_t0.9_s0",
   "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": null,
   "n": 1139,
   "verified_accuracy_strict": {
     "mean": 0.6514,
@@ -8,14 +9,14 @@
     "high": 0.6795
   },
   "verified_accuracy": {
-    "mean": 0.6664,
-    "low": 0.6383,
-    "high": 0.6936
+    "mean": 0.6673,
+    "low": 0.6392,
+    "high": 0.6945
   },
   "ungated_accuracy": {
-    "mean": 0.6857,
+    "mean": 0.6866,
     "low": 0.6585,
-    "high": 0.7129
+    "high": 0.7138
   },
   "coverage": {
     "mean": 0.9508,
@@ -23,9 +24,9 @@
     "high": 0.9631
   },
   "selective_accuracy": {
-    "mean": 0.7008,
-    "low": 0.6731,
-    "high": 0.7295
+    "mean": 0.7018,
+    "low": 0.674,
+    "high": 0.7304
   },
   "parse_rate": 0.9974,
   "abstain_rate": 0.0,

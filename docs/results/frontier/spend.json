@@ -1,0 +1,85 @@
+{
+  "spent_usd": 16.515225499999964,
+  "runs": [
+    {
+      "out": "outputs/frontier/pilot/gpt-5.5-2026-04-23_pipeline.jsonl",
+      "model": "gpt-5.5-2026-04-23",
+      "sent": 20,
+      "skipped": 0,
+      "usd": 0.3597,
+      "usd_per_million_input": 5.0,
+      "usd_per_million_output": 30.0,
+      "note": "pilot, 20 questions"
+    },
+    {
+      "out": "outputs/frontier/pilot/gpt-5.5-2026-04-23_direct.jsonl",
+      "model": "gpt-5.5-2026-04-23",
+      "sent": 20,
+      "skipped": 0,
+      "usd": 0.2295,
+      "usd_per_million_input": 5.0,
+      "usd_per_million_output": 30.0,
+      "note": "pilot, 20 questions"
+    },
+    {
+      "out": "outputs/frontier/pilot/gpt-5.4-mini-2026-03-17_pipeline.jsonl",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "sent": 20,
+      "skipped": 0,
+      "usd": 0.0335,
+      "usd_per_million_input": 0.75,
+      "usd_per_million_output": 4.5,
+      "note": "pilot, 20 questions"
+    },
+    {
+      "out": "outputs/frontier/pilot/gpt-5.4-mini-2026-03-17_direct.jsonl",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "sent": 20,
+      "skipped": 0,
+      "usd": 0.0203,
+      "usd_per_million_input": 0.75,
+      "usd_per_million_output": 4.5,
+      "note": "pilot, 20 questions"
+    },
+    {
+      "out": "outputs/frontier/gpt-5.4-mini-2026-03-17_test_pipeline.jsonl",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "sent": 1139,
+      "skipped": 0,
+      "usd": 2.0254,
+      "usd_per_million_input": 0.75,
+      "usd_per_million_output": 4.5,
+      "finished_at": 1791646842.768401
+    },
+    {
+      "out": "outputs/frontier/gpt-5.4-mini-2026-03-17_test_direct.jsonl",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "sent": 1139,
+      "skipped": 0,
+      "usd": 1.2516,
+      "usd_per_million_input": 0.75,
+      "usd_per_million_output": 4.5,
+      "finished_at": 1791646971.870042
+    },
+    {
+      "out": "outputs/frontier/gpt-5.5-2026-04-23_test_sample400_pipeline.jsonl",
+      "model": "gpt-5.5-2026-04-23",
+      "sent": 400,
+      "skipped": 0,
+      "usd": 7.4368,
+      "usd_per_million_input": 5.0,
+      "usd_per_million_output": 30.0,
+      "finished_at": 1791647183.111938
+    },
+    {
+      "out": "outputs/frontier/gpt-5.5-2026-04-23_test_sample400_direct.jsonl",
+      "model": "gpt-5.5-2026-04-23",
+      "sent": 400,
+      "skipped": 0,
+      "usd": 5.1585,
+      "usd_per_million_input": 5.0,
+      "usd_per_million_output": 30.0,
+      "finished_at": 1791647349.485329
+    }
+  ]
+}

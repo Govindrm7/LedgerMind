@@ -1,0 +1,44 @@
+{
+  "system": "gpt55_sample400_pipeline",
+  "examples": "data/processed/finqa/test_sample400.jsonl",
+  "direct_matching": null,
+  "n": 400,
+  "verified_accuracy_strict": {
+    "mean": 0.3475,
+    "low": 0.3,
+    "high": 0.395
+  },
+  "verified_accuracy": {
+    "mean": 0.75,
+    "low": 0.7074,
+    "high": 0.7925
+  },
+  "ungated_accuracy": {
+    "mean": 0.755,
+    "low": 0.7125,
+    "high": 0.7975
+  },
+  "coverage": {
+    "mean": 0.9825,
+    "low": 0.97,
+    "high": 0.995
+  },
+  "selective_accuracy": {
+    "mean": 0.7634,
+    "low": 0.7201,
+    "high": 0.8015
+  },
+  "parse_rate": 0.9975,
+  "abstain_rate": 0.005,
+  "fabrication_rate": 0.0,
+  "rejection_reasons": {
+    "source_footing_broken": 3,
+    "plan_invalid": 1,
+    "schema_invalid": 1
+  },
+  "latency_s": {
+    "p50": 3.5996,
+    "p95": 7.1147
+  },
+  "completion_tokens_mean": 375.9
+}

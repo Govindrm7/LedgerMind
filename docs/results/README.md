@@ -9,6 +9,8 @@ All runs used one NVIDIA H200 on the Northeastern Explorer cluster, with torch 2
 * **Test set:** the 1,139 FinQA test questions whose gold program grounds fully (`data/processed/finqa/test.jsonl`). **Counterfactual set:** the 846 test questions that Saboteur Mode C could edit (`counterfactual_test.jsonl`).
 * **Verified accuracy:** the answer is correct *and* the verifier accepted it, over all questions. Scale tolerant unless marked strict. Intervals are 95% bootstrap intervals.
 * **Batch invariant:** scored runs set `VLLM_BATCH_INVARIANT=1`, so greedy decoding gives identical outputs on every run. Two SFT runs (`sft_bi1`, `sft_bi2`) produced 0 differing completions out of 1,139. Paired tests rely on this.
+* **Scoring version:** every summary and rows file was rescored with commit 9cb55df, which fixed scale tolerant matching to compare in the gold value's units (a percent answer such as 1.71447 now matches a five decimal fraction gold such as 0.01714). Raw outputs are unchanged; only the trained models' baselines moved by more than a rounding error (base zero shot 20.02% to 20.37%).
+* **Prompt versions:** the trained models and every run below used pipeline prompt v1 unless marked v2. v1 leaves the meaning of function arguments undefined (for example `pct_change(old, new)`) and tells models to convert millions to units, while FinQA answers stay in document units. Models trained on FinQA learn both conventions from data; general models follow the text. v2 (`ledgermind.data.prompts.INSTRUCTIONS_V2`) spells both out.
 * **Logged vs code commit:** "logged" is the cluster checkout's HEAD that the job printed. Some early jobs ran with files copied to the cluster before they were committed, so "code" names the commit whose files match what actually ran.
 
 ## Evaluation runs (`eval/`)
@@ -29,6 +31,19 @@ Each run has a summary (`<name>.json`), per question verdicts (`<name>_rows.json
 | `grpo_counterfactual_test` | Base + SFT + GRPO | counterfactual | greedy, bf16 | 10948438 | 3ae6555 | 3ae6555 |
 
 The counterfactual set was rebuilt on the cluster (job 10948435, code 2fc7cce) and is byte identical to the local build (SHA256 `d9b2bd94...`).
+
+## Frontier API baselines (`frontier/`)
+
+Run from a laptop against the OpenAI API with prompt v1, default reasoning effort, under one hard spending cap of $20 shared by all runs (`--max-cost-usd`, ledger in `spend.json`, which includes the 20 question pilot). Total spent: $16.52, no prompt skipped. The gpt-5.5 runs use a seeded uniform sample of 400 test questions (`test_sample400_ids.json`, seed 0, built by `python -m ledgermind.data.sample`).
+
+| File prefix | Model | Set | Mode | Cost |
+|---|---|---|---|---|
+| `gpt54mini_test_pipeline` | gpt-5.4-mini-2026-03-17 | test | pipeline v1 | $2.03 |
+| `gpt54mini_test_direct_{default,stated}` | gpt-5.4-mini-2026-03-17 | test | direct | $1.25 |
+| `gpt55_sample400_pipeline` | gpt-5.5-2026-04-23 | 400 sample | pipeline v1 | $7.44 |
+| `gpt55_sample400_direct_{default,stated}` | gpt-5.5-2026-04-23 | 400 sample | direct | $5.16 |
+
+Raw outputs are the `gpt-5.*.jsonl.gz` files. Direct answers are scored two ways: `default` with the same matching as every other run, and `stated` with `--stated-precision`, which accepts an answer that equals the gold value rounded to the decimals the model wrote (at least two significant digits) and evaluates fraction answers. The stated rule was added after reading the first direct outputs, where correct rounded answers were marked wrong, so both scores are reported.
 
 ## Paired comparisons (`compare/`)
 

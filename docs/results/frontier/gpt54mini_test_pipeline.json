@@ -1,0 +1,48 @@
+{
+  "system": "gpt54mini_test_pipeline",
+  "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": null,
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.3424,
+    "low": 0.3152,
+    "high": 0.3705
+  },
+  "verified_accuracy": {
+    "mean": 0.6567,
+    "low": 0.6286,
+    "high": 0.6848
+  },
+  "ungated_accuracy": {
+    "mean": 0.6848,
+    "low": 0.6585,
+    "high": 0.7112
+  },
+  "coverage": {
+    "mean": 0.9078,
+    "low": 0.8903,
+    "high": 0.9236
+  },
+  "selective_accuracy": {
+    "mean": 0.7234,
+    "low": 0.6973,
+    "high": 0.7505
+  },
+  "parse_rate": 0.9903,
+  "abstain_rate": 0.0219,
+  "fabrication_rate": 0.0435,
+  "rejection_reasons": {
+    "misattributed": 25,
+    "fabricated": 21,
+    "source_footing_broken": 11,
+    "schema_invalid": 11,
+    "plan_invalid": 11,
+    "bypass": 5,
+    "bad_pointer": 2
+  },
+  "latency_s": {
+    "p50": 1.2511,
+    "p95": 1.6874
+  },
+  "completion_tokens_mean": 152.8
+}
