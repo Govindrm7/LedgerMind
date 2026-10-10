@@ -26,6 +26,13 @@ PORT=$((8000 + SLURM_JOB_ID % 1000))
 EXAMPLES="data/processed/finqa/$SPLIT.jsonl"
 mkdir -p outputs/eval
 
+# A local model must be a complete checkpoint, so this job can safely be chained with
+# --dependency=afterany on a training job that ended without a clean exit status.
+if [ -d "$MODEL" ] && ! { [ -f "$MODEL/config.json" ] && ls "$MODEL"/*.safetensors >/dev/null 2>&1 \
+    && [ -f "$MODEL/tokenizer_config.json" ]; }; then
+  # merge_adapter.py writes the tokenizer after the weights, so its presence means the weights finished
+  echo "incomplete model at $MODEL (need config.json, safetensors weights, tokenizer_config.json)"; exit 1
+fi
 echo "model $MODEL name $NAME split $SPLIT temperature $TEMP seeds $SEEDS git $(git rev-parse --short HEAD)"
 serving/launch_vllm.sh "$MODEL" bf16 "$PORT" > "logs/vllm-$SLURM_JOB_ID.log" 2>&1 &
 SERVER=$!

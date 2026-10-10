@@ -7,6 +7,11 @@
 # and finished stages are skipped, so a second job can pick up where the first stopped:
 #   first=$(sbatch --parsable slurm/grpo.sbatch)
 #   sbatch --dependency=afterany:$first slurm/grpo.sbatch
+#
+# Chain evaluation with afterany, not afterok: one run printed GRPO_DONE with complete
+# outputs and then never exited, which would block an afterok dependency forever. The
+# eval jobs check that the merged model is complete before starting.
+#   sbatch --dependency=afterany:$second slurm/eval.sbatch checkpoints/grpo_qwen3_4b_merged grpo
 #SBATCH --job-name=lm-grpo
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:h200:1
