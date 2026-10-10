@@ -173,12 +173,22 @@ Decisions and their reasons:
 
 * **Fabricated figures can't earn correctness.** Citing the right numbers at the wrong place yields the right value but no credit.
 * **The provenance bonus only counts evidence the plan uses**, and unused evidence costs reward, so padding an answer with easy, real figures does not pay.
-* **Learning rate 5e-6 for LoRA**, about 10x a full finetune rate, with a sweep from 2e-6 to 1e-5 planned.
+* **Learning rate 5e-6 for LoRA**, about 10x a full finetune rate. The one GRPO run used it; a sweep from 2e-6 to 1e-5 was not run.
 * **Prompt filtering by SFT pass rate.** A prompt where all 8 rollouts score the same contributes zero advantage. The CPU smoke test shows this vividly: a random model yields 100% invalid outputs, `frac_reward_zero_std = 1` and a loss of exactly zero. Only prompts the SFT model solves sometimes, but not always, are kept.
 * **beta 0 and the DAPO loss** (TRL 1.x defaults), with truncated completions masked. A KL penalty of 0.04 is an ablation.
 * **Per-term logging.** Every reward term and verdict share is logged separately, so a reward hack shows up as one term moving while `reward/correct` does not.
 
 Both stages run end to end in CPU smoke tests with a tiny model. TRL 1.x routes the loss through a Triton kernel that ships only on Linux; the smoke tests install a pure PyTorch fallback that GPU runs never use.
+
+### The runs
+
+Both stages ran on one NVIDIA H200 (Northeastern Explorer cluster) with torch 2.13.0+cu129, transformers 5.17.0, TRL 1.15.0, PEFT 0.21.2 and vLLM 0.31.0, pinned in `slurm/requirements-cu129.lock`. The jobs that produced every result are in `slurm/`, and `docs/results/README.md` maps each result file to its job and code version.
+
+* **SFT:** 6,193 training examples (13 over 4,096 tokens dropped), 2 epochs in 67 minutes. Final dev loss 0.0191, token accuracy 99.4%.
+* **Pass rate filter:** 8 samples per training prompt at temperature 0.9 from the SFT model. 2,942 prompts were always solved and 548 never; the 2,716 in between are the GRPO prompts (2,706 after the 3,584 token prompt limit).
+* **GRPO:** 16 prompts per step with 8 rollouts each (128 rollouts), 200 steps, about 1.2 passes over the prompts, in 3 hours 48 minutes. The correct term on training rollouts rose from 0.68 to about 0.85 and flattened after step 130; mean completion length stayed near 172 tokens and the fabrication term near zero, so no reward hack showed. Entropy fell from 0.015 to 0.004, and the share of groups where all 8 rollouts scored the same rose from 27% to about 60% as prompts became solved, so later steps carried less signal. Refreshing the prompt set during training (dynamic sampling) is the obvious next step.
+
+On test, GRPO's gain over SFT under greedy decoding is not significant (+0.4 points, McNemar p = 0.40), while under sampling at temperature 0.9 it is +7.1 points [+6.0, +8.2] over four seeds, with questions solved on every seed rising from 552 to 784. GRPO made the sampling distribution reliable rather than changing the most likely answer, and it slightly narrowed the set of questions solved by any of four seeds (79.6% for SFT, 77.2% for GRPO).
 
 ## 8. Evaluation
 
@@ -195,9 +205,35 @@ Both stages run end to end in CPU smoke tests with a tiny model. TRL 1.x routes 
 
 Every metric carries a bootstrap 95% interval (about ±2.5 points at n = 1,139), and every comparison uses a paired test on the same questions (paired bootstrap and exact McNemar). Gold targets score 99.21% verified accuracy on test [98.68%, 99.65%], which matches the measured false rejection rate.
 
-Frontier models are compared two ways: answering directly with chain of thought, and running through the same LedgerMind pipeline. The second comparison is the fair one. If it beats the fine-tuned model on accuracy, the result is reported that way.
+Frontier models are compared two ways: answering directly with chain of thought, and running through the same LedgerMind pipeline. If either beats the fine-tuned model, the result is reported that way.
+
+Three scoring and protocol details turned out to matter, and each is applied identically to every system:
+
+* **Determinism.** vLLM's default batching is not run to run deterministic even at temperature 0, which would leak noise into paired tests. Scored runs use its batch invariant kernels (`VLLM_BATCH_INVARIANT=1`): two reruns of the SFT model gave identical outputs on all 1,139 questions, at about 2.2 times the generation time. Benchmarks use the default mode.
+* **Scale tolerance in the gold's units.** Scale tolerant matching compares the prediction, divided by 100 and multiplied by 100, against the gold value in the gold's own units. An earlier version scaled the gold instead, which multiplied the gold's five decimal rounding error by 100 and wrongly failed percent answers such as 1.71447 against 0.01714. The fix changed only the baselines that answer in percent; the trained models and the oracle were unaffected.
+* **Direct answers at the stated precision.** A direct answer written as 1.64 is scored as matching 1.63657, because that is the gold rounded to the decimals given (at least two significant digits are required, and fraction answers are evaluated). This rule was added after reading the first direct outputs, so both it and the default scoring are reported.
+
+The pipeline prompt has two versions. v1, which the models were trained on, names its functions without defining argument order and tells models to convert millions to units, while FinQA answers stay in document units. Trained models learn both conventions from the data; general models follow the text, and a post hoc count puts the cost to gpt-5.5 through the pipeline at about 8 points. v2 (`INSTRUCTIONS_V2`) documents every function and keeps answers in document units; v1's text is frozen by a hash test. The API pipeline baselines were run with v1 only.
 
 ## 9. Reproducing
+
+On a Slurm cluster, the jobs in `slurm/` run every GPU step; each installs the pinned environment onto node local disk and records its git commit in the log:
+
+```bash
+sbatch slurm/prepare.sbatch                                   # FinQA, CPU
+sbatch slurm/sft.sbatch                                       # SFT and merge
+sbatch slurm/pass_rate.sbatch                                 # GRPO prompt filter
+first=$(sbatch --parsable slurm/grpo.sbatch)                  # GRPO, resumes from checkpoints
+sbatch --dependency=afterany:$first slurm/grpo.sbatch
+sbatch slurm/eval.sbatch checkpoints/grpo_qwen3_4b_merged grpo test
+sbatch slurm/eval_sampled.sbatch checkpoints/grpo_qwen3_4b_merged grpo
+sbatch slurm/bench.sbatch checkpoints/grpo_qwen3_4b_merged grpo_fp8 fp8
+python -m ledgermind.eval.compare --a docs/results/eval/grpo_test_rows.jsonl \
+    --b docs/results/eval/sft_bi1_test_rows.jsonl
+python scripts/build_dashboard.py                             # docs/dashboard/data.json
+```
+
+Equivalent single machine commands:
 
 ```bash
 uv sync                                                  # core package, CPU only
@@ -229,3 +265,6 @@ uv run python -m ledgermind.serving.bench --base-url http://localhost:8000/v1 \
 * Integrity checks need internal redundancy (totals, restatements). About two thirds of tampered cells sit outside any footed block and are undetectable from the document alone.
 * Provenance proves that a figure is printed where it is cited, not that it is the semantically right figure for the question. Choosing the right figure is what the model is trained for, and verified accuracy measures it.
 * Gold labels carry upstream noise. Known cases are excluded or reported, never silently fixed.
+* The trained models never abstain (0% abstain rate), because the SFT targets contain no abstain examples. Questions whose figures are missing from the document (Saboteur Mode B, deleted line items) are answered rather than refused.
+* The frontier comparison is a specialist trained on FinQA against general models seeing it cold, on a 400 question sample with intervals about 4 points wide.
+* Self hosted cost assumes a rented H200 at full utilization; real deployments run below that.
