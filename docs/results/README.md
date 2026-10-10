@@ -26,6 +26,8 @@ Each run has a summary (`<name>.json`), per question verdicts (`<name>_rows.json
 | `grpo_fp8_test` | Base + SFT + GRPO | test | greedy, fp8 | 10948441 | 3ae6555 | 3ae6555 |
 | `sft_test_t0.9_s{0..3}` | Base + SFT | test | sampled, temperature 0.9, seeds 0 to 3 | 10945538 | aafa72d | 3ae6555 |
 | `grpo_test_t0.9_s{0..3}` | Base + SFT + GRPO | test | sampled, temperature 0.9, seeds 0 to 3 | 10945539 | aafa72d | 3ae6555 |
+| `grpo_v2_test` | Base + SFT + GRPO, prompt v2 | test | greedy, bf16 | 10969071 | 417cf40 | 417cf40 |
+| `grpo_v2_counterfactual_test` | Base + SFT + GRPO, prompt v2 | counterfactual | greedy, bf16 | 10969072 | 417cf40 | 417cf40 |
 | `base_zeroshot_counterfactual_test` | Qwen3-4B-Base, zero shot | counterfactual | greedy, bf16 | 10948436 | 3ae6555 | 3ae6555 |
 | `sft_counterfactual_test` | Base + SFT | counterfactual | greedy, bf16 | 10948437 | 3ae6555 | 3ae6555 |
 | `grpo_counterfactual_test` | Base + SFT + GRPO | counterfactual | greedy, bf16 | 10948438 | 3ae6555 | 3ae6555 |
@@ -54,6 +56,7 @@ Produced by `python -m ledgermind.eval.compare` from the rows files above (McNem
 | `compare_sft_vs_base_correct_{scale,strict}.json` | `sft_bi1_test` vs `base_zeroshot_bi_test` |
 | `compare_grpo_vs_sft_correct_{scale,strict}.json` | `grpo_test` vs `sft_bi1_test` |
 | `compare_grpo_fp8_vs_bf16_correct_{scale,strict}.json` | `grpo_fp8_test` vs `grpo_test` |
+| `compare_grpo_v2_vs_v1_correct_{scale,strict}.json` | `grpo_v2_test` vs `grpo_test` (prompt v2 against v1, same model) |
 | `compare_grpo_vs_sft_sampled_t0.9.json` | sampled GRPO vs sampled SFT, per question mean over seeds 0 to 3 |
 
 ## Serving benchmark (`bench/`)
