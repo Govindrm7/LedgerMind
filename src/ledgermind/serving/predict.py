@@ -19,7 +19,7 @@ import time
 from pathlib import Path
 
 from ledgermind.data.prepare import read_jsonl
-from ledgermind.data.prompts import build_direct_prompt, build_prompt
+from ledgermind.data.prompts import PROMPT_VERSIONS, build_direct_prompt, build_prompt
 from ledgermind.serving.client import Budget, ClientConfig, generate_all
 
 
@@ -34,6 +34,12 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--constrained", action="store_true", help="JSON schema decoding")
     parser.add_argument("--concurrency", type=int, default=32)
     parser.add_argument("--max-tokens", type=int, default=512)
+    parser.add_argument(
+        "--prompt-version",
+        choices=PROMPT_VERSIONS,
+        default="v1",
+        help="pipeline prompt; v1 is what the models were trained on",
+    )
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--seed", type=int, help="sampling seed sent with every request")
     parser.add_argument(
@@ -56,8 +62,12 @@ def main(argv: list[str] | None = None) -> None:
         parser.error("--max-cost-usd needs --price-input and --price-output")
 
     examples = read_jsonl(args.examples)[: args.limit]
-    build = build_direct_prompt if args.direct else build_prompt
-    items = [(ex.id, build(ex.question, ex.document)) for ex in examples]
+    if args.direct:
+        items = [(ex.id, build_direct_prompt(ex.question, ex.document)) for ex in examples]
+    else:
+        items = [
+            (ex.id, build_prompt(ex.question, ex.document, args.prompt_version)) for ex in examples
+        ]
     cfg = ClientConfig(
         base_url=args.base_url,
         model=args.model,

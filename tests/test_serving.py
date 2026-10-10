@@ -123,7 +123,7 @@ def test_predict_ledger_accumulates_across_runs(tmp_path, monkeypatch):
     examples = [SimpleNamespace(id=f"q{i}", question="q", document=None) for i in range(2)]
     monkeypatch.setattr(predict, "generate_all", fake_generate_all)
     monkeypatch.setattr(predict, "read_jsonl", lambda path: examples)
-    monkeypatch.setattr(predict, "build_prompt", lambda question, document: "p")
+    monkeypatch.setattr(predict, "build_prompt", lambda question, document, version="v1": "p")
     ledger = tmp_path / "spend.json"
     args = [
         "--examples",
