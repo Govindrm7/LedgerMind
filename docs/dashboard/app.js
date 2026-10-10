@@ -108,14 +108,17 @@ function hbarPath(x0, x1, y, h, r = 4) {
 
 /* Greedy label placement: the first of four spots around the point that overlaps no
    placed label or point and stays inside the plot. */
-function placeLabel(cx, cy, w, placed, W, m) {
+function placeLabel(cx, cy, w, placed, W, m, below = false) {
   const h = 14;
-  const spots = [
+  const spots0 = [
     { x: cx + 10, y: cy - 8, anchor: "start", box: [cx + 10, cx + 10 + w, cy - 8 - h + 3, cy - 8 + 3] },
     { x: cx - 10, y: cy - 8, anchor: "end", box: [cx - 10 - w, cx - 10, cy - 8 - h + 3, cy - 8 + 3] },
     { x: cx + 10, y: cy + 16, anchor: "start", box: [cx + 10, cx + 10 + w, cy + 16 - h + 3, cy + 16 + 3] },
     { x: cx - 10, y: cy + 16, anchor: "end", box: [cx - 10 - w, cx - 10, cy + 16 - h + 3, cy + 16 + 3] },
   ];
+  // A point on the Pareto front with a higher neighbor to its right has the front line
+  // running up through its upper right, so its label goes below.
+  const spots = below ? [spots0[2], spots0[3], spots0[0], spots0[1]] : spots0;
   const fits = ([x0, x1]) => x0 >= m.l && x1 <= W - m.r;
   const free = ([x0, x1, y0, y1]) => placed.every((b) => x1 < b.x0 || x0 > b.x1 || y1 < b.y0 || y0 > b.y1);
   const pick = spots.find((sp) => fits(sp.box) && free(sp.box)) || spots.find((sp) => fits(sp.box)) || spots[0];
@@ -214,7 +217,8 @@ function renderScatter(d) {
         svg.append(s("line", { x1: cx, x2: cx, y1: Y(p.accuracy.low), y2: Y(p.accuracy.high), stroke: color, "stroke-width": 2, "stroke-linecap": "round", opacity: 0.55 }));
         const g = s("g", { cursor: "default" });
         g.append(s("circle", { cx, cy, r: 14, fill: "transparent" }), s("circle", { cx, cy, r: 5, fill: color, stroke: "var(--surface-1)", "stroke-width": 2 }));
-        const pos = placeLabel(cx, cy, p.label.length * 6.6, placed, W, m);
+        const fi = front.indexOf(p);
+        const pos = placeLabel(cx, cy, p.label.length * 6.6, placed, W, m, fi >= 0 && fi < front.length - 1);
         g.append(s("text", { x: pos.x, y: pos.y, "text-anchor": pos.anchor, class: p.group === "ours" ? "label-strong" : "label" }, p.label));
         hoverable(g, () => [
           { value: pct(p.accuracy.mean), label: p.label, color },
