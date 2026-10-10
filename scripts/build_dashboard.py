@@ -140,11 +140,8 @@ def systems_on_sample(sample: set[str]) -> list[dict]:
             api_cost(FRONTIER / "gpt-5.4-mini-2026-03-17_test_pipeline.jsonl.gz", 0.75, 4.50),
         ),
     ]
-    for meta in sorted(OPEN.glob("*/system.json")) if OPEN.exists() else []:
-        m = read_json(meta)
-        specs.append(
-            (m["key"], m["label"], "open", meta.parent / m["rows"], m["verified"], m.get("cost"))
-        )
+    for m in open_systems().get("sample_systems", []):
+        specs.append((m["key"], m["label"], "open", OPEN / m["rows"], m["verified"], None))
     grpo = {k: v for k, v in load_rows(specs[0][3]).items() if k in sample}
     out = []
     for key, label, group, rows_path, verified, cost in specs:
@@ -165,6 +162,12 @@ def systems_on_sample(sample: set[str]) -> list[dict]:
     return out
 
 
+def open_systems() -> dict:
+    """Open weight baselines, listed in docs/results/open/systems.json when they exist."""
+    path = OPEN / "systems.json"
+    return read_json(path) if path.exists() else {}
+
+
 def full_test_table() -> list[dict]:
     specs = [
         ("LedgerMind GRPO (ours)", EVAL / "grpo_test.json"),
@@ -175,6 +178,7 @@ def full_test_table() -> list[dict]:
         ("gpt-5.4-mini, direct (stated precision)", FRONTIER / "gpt54mini_test_direct_stated.json"),
         ("gpt-5.4-mini, direct (default scoring)", FRONTIER / "gpt54mini_test_direct_default.json"),
     ]
+    specs += [(m["label"], OPEN / m["summary"]) for m in open_systems().get("full_test", [])]
     rows = []
     for label, path in specs:
         d = read_json(path)
@@ -280,15 +284,22 @@ def saboteur() -> dict:
         for k, v in s["mode_b_document_faults"].items()
     }
     mode_c = []
-    for label, real, cf in (
-        ("Qwen3-4B base", "base_zeroshot_bi_test", "base_zeroshot_counterfactual_test"),
-        ("LedgerMind SFT", "sft_bi1_test", "sft_counterfactual_test"),
-        ("LedgerMind GRPO", "grpo_test", "grpo_counterfactual_test"),
-    ):
-        cf_rows = load_rows(EVAL / f"{cf}_rows.jsonl")
-        real_rows = {
-            k: v for k, v in load_rows(EVAL / f"{real}_rows.jsonl").items() if k in cf_rows
-        }
+    pairs = [
+        (
+            "Qwen3-4B base",
+            EVAL / "base_zeroshot_bi_test",
+            EVAL / "base_zeroshot_counterfactual_test",
+        ),
+        ("LedgerMind SFT", EVAL / "sft_bi1_test", EVAL / "sft_counterfactual_test"),
+        ("LedgerMind GRPO", EVAL / "grpo_test", EVAL / "grpo_counterfactual_test"),
+    ]
+    pairs += [
+        (m["label"], OPEN / m["real"], OPEN / m["counterfactual"])
+        for m in open_systems().get("mode_c", [])
+    ]
+    for label, real, cf in pairs:
+        cf_rows = load_rows(Path(f"{cf}_rows.jsonl"))
+        real_rows = {k: v for k, v in load_rows(Path(f"{real}_rows.jsonl")).items() if k in cf_rows}
         c = compare(cf_rows, real_rows)
         mode_c.append(
             {
