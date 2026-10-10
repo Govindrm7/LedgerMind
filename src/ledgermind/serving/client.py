@@ -39,6 +39,47 @@ class Generation:
         }
 
 
+@dataclass
+class Budget:
+    """Hard spending cap for paid APIs, enforced before each request is sent.
+
+    Cost comes from the token usage each response reports times the list prices. A request
+    starts only if the spend so far plus every in flight request, each priced at the most
+    expensive request seen, stays within the cap, so the run stops short of the cap rather
+    than past it.
+    """
+
+    cap_usd: float
+    usd_per_million_input: float
+    usd_per_million_output: float
+    spent_usd: float = 0.0
+    in_flight: int = 0
+    max_request_usd: float = 0.0
+    sent: int = 0
+    skipped: int = 0
+
+    def cost(self, g: Generation) -> float:
+        tokens_in, tokens_out = g.prompt_tokens or 0, g.completion_tokens or 0
+        return (
+            tokens_in * self.usd_per_million_input + tokens_out * self.usd_per_million_output
+        ) / 1e6
+
+    def try_start(self) -> bool:
+        projected = self.spent_usd + (self.in_flight + 1) * self.max_request_usd
+        if self.spent_usd >= self.cap_usd or projected > self.cap_usd:
+            self.skipped += 1
+            return False
+        self.in_flight += 1
+        self.sent += 1
+        return True
+
+    def finish(self, g: Generation) -> None:
+        self.in_flight -= 1
+        c = self.cost(g)
+        self.spent_usd += c
+        self.max_request_usd = max(self.max_request_usd, c)
+
+
 @dataclass(frozen=True)
 class ClientConfig:
     base_url: str
@@ -117,8 +158,13 @@ async def generate_all(
     items: list[tuple[str, str]],
     concurrency: int,
     transport: httpx.AsyncBaseTransport | None = None,
+    budget: Budget | None = None,
 ) -> tuple[list[Generation], float]:
-    """Run all prompts with at most ``concurrency`` in flight. Returns results and wall time."""
+    """Run all prompts with at most ``concurrency`` in flight. Returns results and wall time.
+
+    With a ``budget``, prompts that would exceed the cap are not sent and come back with an
+    error, so the output still has one record per prompt.
+    """
     semaphore = asyncio.Semaphore(concurrency)
     limits = httpx.Limits(max_connections=concurrency, max_keepalive_connections=concurrency)
     async with httpx.AsyncClient(
@@ -127,7 +173,13 @@ async def generate_all(
 
         async def bounded(item_id: str, prompt: str) -> Generation:
             async with semaphore:
-                return await generate_one(client, cfg, item_id, prompt)
+                if budget is None:
+                    return await generate_one(client, cfg, item_id, prompt)
+                if not budget.try_start():
+                    return Generation(item_id, "", 0.0, None, None, "budget exhausted: not sent")
+                g = await generate_one(client, cfg, item_id, prompt)
+                budget.finish(g)
+                return g
 
         start = time.perf_counter()
         results = await asyncio.gather(*(bounded(i, p) for i, p in items))

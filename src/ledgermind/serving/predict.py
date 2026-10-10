@@ -15,11 +15,12 @@ import argparse
 import asyncio
 import json
 import os
+import time
 from pathlib import Path
 
 from ledgermind.data.prepare import read_jsonl
 from ledgermind.data.prompts import build_direct_prompt, build_prompt
-from ledgermind.serving.client import ClientConfig, generate_all
+from ledgermind.serving.client import Budget, ClientConfig, generate_all
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -39,9 +40,20 @@ def main(argv: list[str] | None = None) -> None:
         "--reasoning", action="store_true", help="OpenAI reasoning model request parameters"
     )
     parser.add_argument("--reasoning-effort", help="reasoning effort; omit for the model default")
+    parser.add_argument("--max-cost-usd", type=float, help="hard cap on total spend for paid APIs")
+    parser.add_argument("--price-input", type=float, help="USD per 1M input tokens (with a cap)")
+    parser.add_argument("--price-output", type=float, help="USD per 1M output tokens (with a cap)")
+    parser.add_argument(
+        "--ledger",
+        type=Path,
+        default=Path("outputs/frontier/spend.json"),
+        help="spend shared across runs, so one cap covers all of them",
+    )
     parser.add_argument("--limit", type=int)
     parser.add_argument("--api-key-env", help="environment variable holding the API key")
     args = parser.parse_args(argv)
+    if args.max_cost_usd is not None and (args.price_input is None or args.price_output is None):
+        parser.error("--max-cost-usd needs --price-input and --price-output")
 
     examples = read_jsonl(args.examples)[: args.limit]
     build = build_direct_prompt if args.direct else build_prompt
@@ -58,13 +70,39 @@ def main(argv: list[str] | None = None) -> None:
         reasoning_effort=args.reasoning_effort,
         constrained=args.constrained,
     )
-    results, wall = asyncio.run(generate_all(cfg, items, args.concurrency))
+    budget, ledger = None, {"spent_usd": 0.0, "runs": []}
+    if args.max_cost_usd is not None:
+        if args.ledger.exists():
+            ledger = json.loads(args.ledger.read_text())
+        budget = Budget(args.max_cost_usd, args.price_input, args.price_output, ledger["spent_usd"])
+    results, wall = asyncio.run(generate_all(cfg, items, args.concurrency, budget=budget))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w") as fh:
         for g in results:
             fh.write(json.dumps(g.as_record()) + "\n")
     errors = sum(g.error is not None for g in results)
     print(f"{len(results)} predictions in {wall:.1f}s ({errors} errors) -> {args.out}")
+    if budget is not None:
+        run_usd = budget.spent_usd - ledger["spent_usd"]
+        ledger["runs"].append(
+            {
+                "out": str(args.out),
+                "model": args.model,
+                "sent": budget.sent,
+                "skipped": budget.skipped,
+                "usd": round(run_usd, 4),
+                "usd_per_million_input": args.price_input,
+                "usd_per_million_output": args.price_output,
+                "finished_at": time.time(),
+            }
+        )
+        ledger["spent_usd"] = budget.spent_usd
+        args.ledger.parent.mkdir(parents=True, exist_ok=True)
+        args.ledger.write_text(json.dumps(ledger, indent=2) + "\n")
+        print(
+            f"spend: this run ${run_usd:.4f}, total ${budget.spent_usd:.4f} of "
+            f"${args.max_cost_usd:.2f} cap ({budget.skipped} prompts not sent)"
+        )
 
 
 if __name__ == "__main__":
