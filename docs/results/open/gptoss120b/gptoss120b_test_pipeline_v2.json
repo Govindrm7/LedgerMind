@@ -1,0 +1,48 @@
+{
+  "system": "gptoss120b_pipeline_v2",
+  "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": null,
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.2695,
+    "low": 0.2432,
+    "high": 0.2941
+  },
+  "verified_accuracy": {
+    "mean": 0.633,
+    "low": 0.6049,
+    "high": 0.6594
+  },
+  "ungated_accuracy": {
+    "mean": 0.6567,
+    "low": 0.6295,
+    "high": 0.6831
+  },
+  "coverage": {
+    "mean": 0.8191,
+    "low": 0.7954,
+    "high": 0.842
+  },
+  "selective_accuracy": {
+    "mean": 0.7728,
+    "low": 0.746,
+    "high": 0.7985
+  },
+  "parse_rate": 0.9289,
+  "abstain_rate": 0.0597,
+  "fabrication_rate": 0.0313,
+  "rejection_reasons": {
+    "schema_invalid": 81,
+    "misattributed": 22,
+    "plan_invalid": 15,
+    "fabricated": 9,
+    "source_footing_broken": 8,
+    "bypass": 4,
+    "bad_pointer": 1
+  },
+  "latency_s": {
+    "p50": 28.1519,
+    "p95": 43.5988
+  },
+  "completion_tokens_mean": 498.9
+}

@@ -1,0 +1,40 @@
+{
+  "system": "gptoss120b_direct_stated",
+  "examples": "data/processed/finqa/test.jsonl",
+  "direct_matching": "stated_precision",
+  "n": 1139,
+  "verified_accuracy_strict": {
+    "mean": 0.3073,
+    "low": 0.2801,
+    "high": 0.3345
+  },
+  "verified_accuracy": {
+    "mean": 0.7199,
+    "low": 0.6945,
+    "high": 0.7454
+  },
+  "ungated_accuracy": {
+    "mean": 0.374,
+    "low": 0.3468,
+    "high": 0.4021
+  },
+  "coverage": {
+    "mean": 0.9912,
+    "low": 0.9851,
+    "high": 0.9956
+  },
+  "selective_accuracy": {
+    "mean": 0.7263,
+    "low": 0.6988,
+    "high": 0.752
+  },
+  "parse_rate": 0.9912,
+  "abstain_rate": 0.0,
+  "fabrication_rate": 0.0,
+  "rejection_reasons": {},
+  "latency_s": {
+    "p50": 18.5568,
+    "p95": 37.668
+  },
+  "completion_tokens_mean": 385.4
+}

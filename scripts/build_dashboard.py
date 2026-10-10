@@ -188,7 +188,8 @@ def full_test_table() -> list[dict]:
                 "n": d["n"],
                 "verified": d["verified_accuracy"],
                 "strict": d["verified_accuracy_strict"]["mean"],
-                "ungated": d["ungated_accuracy"]["mean"],
+                # ungated accuracy (every computed value returned) only applies to pipeline answers
+                "ungated": None if d.get("direct_matching") else d["ungated_accuracy"]["mean"],
                 "coverage": d["coverage"]["mean"],
                 "parse_rate": d["parse_rate"],
                 "fabrication_rate": d["fabrication_rate"],

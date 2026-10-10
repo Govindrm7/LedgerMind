@@ -1,0 +1,46 @@
+{
+  "sample_systems": [
+    {
+      "key": "gptoss_direct",
+      "label": "gpt-oss-120b, direct answer",
+      "rows": "gptoss120b/gptoss120b_test_direct_stated_rows.jsonl",
+      "verified": false
+    },
+    {
+      "key": "gptoss_pipeline",
+      "label": "gpt-oss-120b + LedgerMind pipeline",
+      "rows": "gptoss120b/gptoss120b_test_pipeline_v1_rows.jsonl",
+      "verified": true
+    }
+  ],
+  "full_test": [
+    {
+      "label": "gpt-oss-120b + pipeline (prompt v1)",
+      "summary": "gptoss120b/gptoss120b_test_pipeline_v1.json"
+    },
+    {
+      "label": "gpt-oss-120b + pipeline (prompt v2)",
+      "summary": "gptoss120b/gptoss120b_test_pipeline_v2.json"
+    },
+    {
+      "label": "gpt-oss-120b, direct (stated precision)",
+      "summary": "gptoss120b/gptoss120b_test_direct_stated.json"
+    },
+    {
+      "label": "gpt-oss-120b, direct (default scoring)",
+      "summary": "gptoss120b/gptoss120b_test_direct.json"
+    }
+  ],
+  "mode_c": [
+    {
+      "label": "gpt-oss-120b, direct",
+      "real": "gptoss120b/gptoss120b_test_direct_stated",
+      "counterfactual": "gptoss120b/gptoss120b_counterfactual_test_direct_stated"
+    },
+    {
+      "label": "gpt-oss-120b, pipeline v2",
+      "real": "gptoss120b/gptoss120b_test_pipeline_v2",
+      "counterfactual": "gptoss120b/gptoss120b_counterfactual_test_pipeline_v2"
+    }
+  ]
+}

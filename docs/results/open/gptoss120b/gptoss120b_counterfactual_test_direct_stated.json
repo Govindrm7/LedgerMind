@@ -1,0 +1,45 @@
+{
+  "system": "gptoss120b_cf_direct_stated",
+  "examples": "data/processed/finqa/counterfactual_test.jsonl",
+  "direct_matching": "stated_precision",
+  "n": 846,
+  "verified_accuracy_strict": {
+    "mean": 0.2991,
+    "low": 0.2671,
+    "high": 0.3298
+  },
+  "verified_accuracy": {
+    "mean": 0.6809,
+    "low": 0.6478,
+    "high": 0.7116
+  },
+  "ungated_accuracy": {
+    "mean": 0.3286,
+    "low": 0.2955,
+    "high": 0.3593
+  },
+  "coverage": {
+    "mean": 0.9894,
+    "low": 0.9823,
+    "high": 0.9953
+  },
+  "selective_accuracy": {
+    "mean": 0.6882,
+    "low": 0.6583,
+    "high": 0.7192
+  },
+  "parse_rate": 0.9894,
+  "abstain_rate": 0.0,
+  "fabrication_rate": 0.0,
+  "rejection_reasons": {},
+  "latency_s": {
+    "p50": 18.7218,
+    "p95": 40.4135
+  },
+  "completion_tokens_mean": 403.4,
+  "recalled_original_rate": {
+    "mean": 0.0106,
+    "low": 0.0047,
+    "high": 0.0178
+  }
+}

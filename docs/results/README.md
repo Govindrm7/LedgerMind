@@ -49,6 +49,16 @@ Run from a laptop against the OpenAI API with prompt v1, default reasoning effor
 
 Raw outputs are the `gpt-5.*.jsonl.gz` files. Direct answers are scored two ways: `default` with the same matching as every other run, and `stated` with `--stated-precision`, which accepts an answer that equals the gold value rounded to the decimals the model wrote (at least two significant digits) and evaluates fraction answers. The stated rule was added after reading the first direct outputs, where correct rounded answers were marked wrong, so both scores are reported.
 
+## Open weight baselines (`open/`)
+
+Self hosted on the cluster with vLLM 0.31 and a reasoning parser that strips the thinking from each reply (`slurm/eval_open.sbatch`), greedy decoding, batch invariant mode off, up to 12,288 output tokens and a 16,384 token context. One job per model runs five passes: test through pipeline prompt v1 and v2, test as a direct answer, and counterfactual test through pipeline v2 and directly. Direct answers are rescored with `--stated-precision` locally (the `_stated` files). `systems.json` lists which files the dashboard uses.
+
+| Folder | Model | GPU | Job | Code |
+|---|---|---|---|---|
+| `gptoss120b/` | openai/gpt-oss-120b (MXFP4, Marlin MoE kernels, reasoning effort default) | A100 80GB | 10972645 | 417cf40 |
+
+These runs used A100 GPUs while the trained models ran on H200, so their latency and throughput are not comparable and they are left out of the cost chart.
+
 ## Paired comparisons (`compare/`)
 
 Produced by `python -m ledgermind.eval.compare` from the rows files above (McNemar and paired bootstrap on the same questions).
