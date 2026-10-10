@@ -2,6 +2,7 @@
 # Download model weights into the Hugging Face cache on scratch before a GPU job needs them.
 #
 #   sbatch slurm/download.sbatch Qwen/Qwen3.8-27B
+#   HF_DOWNLOAD_ARGS='--exclude original/* metal/*' sbatch slurm/download.sbatch openai/gpt-oss-120b
 #SBATCH --job-name=lm-download
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=8
@@ -13,7 +14,8 @@ source "${LEDGERMIND_ENV:-$HOME/.config/ledgermind/env.sh}"
 
 for MODEL in "$@"; do
   echo "downloading $MODEL to $HF_HOME"
-  uvx --from "huggingface_hub[hf_xet]" hf download "$MODEL" --max-workers 8
+  # shellcheck disable=SC2086  # HF_DOWNLOAD_ARGS holds several flags
+  uvx --from "huggingface_hub[hf_xet]" hf download "$MODEL" --max-workers 8 ${HF_DOWNLOAD_ARGS:-}
 done
 du -sh "$HF_HOME"/hub/models--* 2>/dev/null
 echo DOWNLOAD_DONE
