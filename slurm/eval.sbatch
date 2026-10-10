@@ -2,6 +2,7 @@
 # Serve a model with vLLM on this node, generate answers for a split, and score them.
 #
 #   sbatch slurm/eval.sbatch <model_path_or_hub_id> <name> [split] [variant]
+#   PROMPT_VERSION=v2 sbatch slurm/eval.sbatch ...   (pipeline prompt version, default v1)
 #
 # Writes outputs/eval/<name>_<split>.jsonl (raw outputs), <name>_<split>.json (metrics)
 # and <name>_<split>_rows.jsonl (per question verdicts).
@@ -24,6 +25,7 @@ MODEL="${1:?model path or hub id}"
 NAME="${2:?run name}"
 SPLIT="${3:-test}"
 VARIANT="${4:-bf16}"
+PROMPT_VERSION="${PROMPT_VERSION:-v1}"
 PORT=$((8000 + SLURM_JOB_ID % 1000))
 EXAMPLES="data/processed/finqa/$SPLIT.jsonl"
 OUT="outputs/eval/${NAME}_${SPLIT}"
@@ -36,7 +38,7 @@ if [ -d "$MODEL" ] && ! { [ -f "$MODEL/config.json" ] && ls "$MODEL"/*.safetenso
   # merge_adapter.py writes the tokenizer after the weights, so its presence means the weights finished
   echo "incomplete model at $MODEL (need config.json, safetensors weights, tokenizer_config.json)"; exit 1
 fi
-echo "model $MODEL name $NAME split $SPLIT variant $VARIANT batch_invariant $VLLM_BATCH_INVARIANT git $(git rev-parse --short HEAD)"
+echo "model $MODEL name $NAME split $SPLIT variant $VARIANT batch_invariant $VLLM_BATCH_INVARIANT prompt $PROMPT_VERSION git $(git rev-parse --short HEAD)"
 serving/launch_vllm.sh "$MODEL" "$VARIANT" "$PORT" > "logs/vllm-$SLURM_JOB_ID.log" 2>&1 &
 SERVER=$!
 trap 'kill $SERVER 2>/dev/null || true' EXIT
@@ -46,7 +48,7 @@ until curl -sf "http://localhost:$PORT/health" >/dev/null; do
 done
 echo "vLLM ready on :$PORT"
 
-python -m ledgermind.serving.predict --examples "$EXAMPLES" \
+python -m ledgermind.serving.predict --examples "$EXAMPLES" --prompt-version "$PROMPT_VERSION" \
   --base-url "http://localhost:$PORT/v1" --model ledgermind --out "$OUT.jsonl"
 python -m ledgermind.eval.harness --examples "$EXAMPLES" --predictions "$OUT.jsonl" \
   --name "$NAME" --out "$OUT.json" --rows "${OUT}_rows.jsonl"

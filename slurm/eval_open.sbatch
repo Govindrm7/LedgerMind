@@ -1,6 +1,7 @@
 #!/bin/bash
-# Score an open weight baseline model on test and counterfactual test, through the
-# LedgerMind pipeline and as a direct answer, with one vLLM server for all four passes.
+# Score an open weight baseline model with one vLLM server for all passes: on test through
+# the pipeline with prompt v1 (the prompt the API baselines saw) and v2 (conventions spelled
+# out), and as a direct answer; on counterfactual test through pipeline v2 and directly.
 #
 #   sbatch slurm/eval_open.sbatch <hub_id> <name> <reasoning_parser>
 #
@@ -39,18 +40,20 @@ until curl -sf "http://localhost:$PORT/health" >/dev/null; do
 done
 echo "vLLM ready on :$PORT"
 
-for SPLIT in test counterfactual_test; do
-  for MODE in pipeline direct; do
-    FLAG=""; [ "$MODE" = direct ] && FLAG="--direct"
-    OUT="outputs/eval/${NAME}_${SPLIT}_${MODE}"
-    EXAMPLES="data/processed/finqa/$SPLIT.jsonl"
-    # shellcheck disable=SC2086
-    python -m ledgermind.serving.predict --examples "$EXAMPLES" --endpoint chat $FLAG \
-      --max-tokens "$MAX_TOKENS" --concurrency 64 \
-      --base-url "http://localhost:$PORT/v1" --model ledgermind --out "$OUT.jsonl"
-    # shellcheck disable=SC2086
-    python -m ledgermind.eval.harness --examples "$EXAMPLES" --predictions "$OUT.jsonl" $FLAG \
-      --name "${NAME}_${MODE}" --out "$OUT.json" --rows "${OUT}_rows.jsonl"
-  done
+# split:mode where mode is pipeline_v1, pipeline_v2 or direct
+for PASS in test:pipeline_v1 test:pipeline_v2 test:direct \
+            counterfactual_test:pipeline_v2 counterfactual_test:direct; do
+  SPLIT=${PASS%%:*}; MODE=${PASS#*:}
+  if [ "$MODE" = direct ]; then FLAGS="--direct"; else FLAGS="--prompt-version ${MODE#pipeline_}"; fi
+  SCORE=""; [ "$MODE" = direct ] && SCORE="--direct"
+  OUT="outputs/eval/${NAME}_${SPLIT}_${MODE}"
+  EXAMPLES="data/processed/finqa/$SPLIT.jsonl"
+  # shellcheck disable=SC2086
+  python -m ledgermind.serving.predict --examples "$EXAMPLES" --endpoint chat $FLAGS \
+    --max-tokens "$MAX_TOKENS" --concurrency 64 \
+    --base-url "http://localhost:$PORT/v1" --model ledgermind --out "$OUT.jsonl"
+  # shellcheck disable=SC2086
+  python -m ledgermind.eval.harness --examples "$EXAMPLES" --predictions "$OUT.jsonl" $SCORE \
+    --name "${NAME}_${MODE}" --out "$OUT.json" --rows "${OUT}_rows.jsonl"
 done
 echo EVAL_OPEN_DONE
