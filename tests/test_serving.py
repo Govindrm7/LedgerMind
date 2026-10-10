@@ -71,6 +71,15 @@ def test_sampling_seed_is_sent_only_when_set():
     assert body["temperature"] == 0.9 and body["seed"] == 3
 
 
+def test_reasoning_models_get_completion_token_budget_and_no_temperature():
+    cfg = ClientConfig(base_url="u", model="m", endpoint="chat", reasoning=True, max_tokens=8000)
+    body = request_body(cfg, "p")
+    assert body["max_completion_tokens"] == 8000
+    assert not {"max_tokens", "temperature", "seed", "reasoning_effort"} & body.keys()
+    effort = ClientConfig(base_url="u", model="m", reasoning=True, reasoning_effort="low")
+    assert request_body(effort, "p")["reasoning_effort"] == "low"
+
+
 def test_bench_sweep_reports_each_level():
     transport, _ = fake_server()
     items = [(f"q{i}", "p") for i in range(8)]

@@ -48,15 +48,24 @@ class ClientConfig:
     max_tokens: int = 512
     temperature: float = 0.0
     seed: int | None = None  # per request sampling seed, for reproducible sampled evals
+    # OpenAI reasoning models take max_completion_tokens (reasoning included) and reject a
+    # custom temperature or seed; effort None keeps the model default.
+    reasoning: bool = False
+    reasoning_effort: str | None = None
     constrained: bool = False
     timeout_s: float = 300.0
     retries: int = 2
 
 
 def request_body(cfg: ClientConfig, prompt: str) -> dict:
-    body: dict = {"model": cfg.model, "max_tokens": cfg.max_tokens, "temperature": cfg.temperature}
-    if cfg.seed is not None:
-        body["seed"] = cfg.seed
+    if cfg.reasoning:
+        body: dict = {"model": cfg.model, "max_completion_tokens": cfg.max_tokens}
+        if cfg.reasoning_effort:
+            body["reasoning_effort"] = cfg.reasoning_effort
+    else:
+        body = {"model": cfg.model, "max_tokens": cfg.max_tokens, "temperature": cfg.temperature}
+        if cfg.seed is not None:
+            body["seed"] = cfg.seed
     if cfg.endpoint == "chat":
         body["messages"] = [{"role": "user", "content": prompt}]
     else:

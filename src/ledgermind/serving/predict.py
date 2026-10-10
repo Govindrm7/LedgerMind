@@ -35,6 +35,10 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--max-tokens", type=int, default=512)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--seed", type=int, help="sampling seed sent with every request")
+    parser.add_argument(
+        "--reasoning", action="store_true", help="OpenAI reasoning model request parameters"
+    )
+    parser.add_argument("--reasoning-effort", help="reasoning effort; omit for the model default")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--api-key-env", help="environment variable holding the API key")
     args = parser.parse_args(argv)
@@ -50,6 +54,8 @@ def main(argv: list[str] | None = None) -> None:
         max_tokens=args.max_tokens if not args.direct else max(args.max_tokens, 1024),
         temperature=args.temperature,
         seed=args.seed,
+        reasoning=args.reasoning,
+        reasoning_effort=args.reasoning_effort,
         constrained=args.constrained,
     )
     results, wall = asyncio.run(generate_all(cfg, items, args.concurrency))
