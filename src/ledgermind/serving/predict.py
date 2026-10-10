@@ -33,6 +33,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--direct", action="store_true", help="free form answer baseline")
     parser.add_argument("--constrained", action="store_true", help="JSON schema decoding")
     parser.add_argument("--concurrency", type=int, default=32)
+    parser.add_argument("--timeout-s", type=float, default=300.0, help="per request timeout")
     parser.add_argument("--max-tokens", type=int, default=512)
     parser.add_argument(
         "--prompt-version",
@@ -79,6 +80,7 @@ def main(argv: list[str] | None = None) -> None:
         reasoning=args.reasoning,
         reasoning_effort=args.reasoning_effort,
         constrained=args.constrained,
+        timeout_s=args.timeout_s,
     )
     budget, ledger = None, {"spent_usd": 0.0, "runs": []}
     if args.max_cost_usd is not None:
