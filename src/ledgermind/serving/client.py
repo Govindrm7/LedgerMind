@@ -121,7 +121,9 @@ def request_body(cfg: ClientConfig, prompt: str) -> dict:
 
 def _text(cfg: ClientConfig, payload: dict) -> str:
     choice = payload["choices"][0]
-    return choice["message"]["content"] if cfg.endpoint == "chat" else choice["text"]
+    # A reasoning model that spends its whole budget thinking returns content null
+    text = choice["message"]["content"] if cfg.endpoint == "chat" else choice["text"]
+    return text or ""
 
 
 async def generate_one(

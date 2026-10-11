@@ -141,3 +141,11 @@ def test_stated_precision_scoring_credits_rounded_answers_only():
     too_coarse = {"T-0": {"completion": f"Answer: {gold:.2f}"}}  # 0.02: one digit
     coarse, _ = evaluate(EXAMPLES[:1], too_coarse, direct=True, stated_precision=True)
     assert coarse["verified_accuracy"]["mean"] == 0.0
+
+
+def test_null_completion_scores_as_wrong_not_a_crash():
+    preds = {"T-0": {"completion": None}}
+    pipeline, _ = evaluate(EXAMPLES[:1], preds)
+    direct, _ = evaluate(EXAMPLES[:1], preds, direct=True, stated_precision=True)
+    assert pipeline["verified_accuracy"]["mean"] == 0.0
+    assert direct["verified_accuracy"]["mean"] == 0.0

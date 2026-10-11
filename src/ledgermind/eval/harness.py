@@ -131,7 +131,7 @@ def parse_direct_answer_stated(text: str) -> tuple[float | bool | None, int | No
 def score_pipeline(
     ex: ConvertedExample, pred: dict | None, original: float | bool | None, issues=None
 ) -> Row:
-    completion = (pred or {}).get("completion", "")
+    completion = (pred or {}).get("completion") or ""
     verdict = verify(completion, ex.document, integrity_issues=issues)
     value = verdict.value
     accepted = verdict.accepted
@@ -161,7 +161,7 @@ def score_direct(
     original: float | bool | None,
     stated_precision: bool = False,
 ) -> Row:
-    text = (pred or {}).get("completion", "")
+    text = (pred or {}).get("completion") or ""
     if stated_precision:
         value, decimals = parse_direct_answer_stated(text)
 
